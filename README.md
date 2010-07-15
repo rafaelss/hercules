@@ -3,7 +3,7 @@
   Very simple deployment tool. It was made to deploy rails applications using github, bundler and thor.
   This project is in it's early stages of development, so it is not usable yet.
   
-## Features (so far)
+## Features (planned)
 
   * Parses github post-receive http hook.
   * Uses the eventmachine http server, little dependencies, simple code.
