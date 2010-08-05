@@ -5,8 +5,13 @@ require 'eventmachine'
 require 'evma_httpserver'
 require 'json'
 
-class HttpHandler  < EventMachine::Connection
+class HttpHandler < EventMachine::Connection
   include EventMachine::HttpServer
+
+  def initialize *args
+    @config = args[0][:config]
+    @log = args[0][:log]
+  end
 
   def process_http_request
     resp = EventMachine::DelegatedHttpResponse.new( self )

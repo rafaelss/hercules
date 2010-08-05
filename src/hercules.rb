@@ -101,14 +101,14 @@ class Hercules
       EventMachine.epoll
       host = "0.0.0.0"
       port = 8080
-      EventMachine::start_server(host, port, HttpHandler)
+      EventMachine::start_server(host, port, HttpHandler, {:log => @log, :config => @options})
       @log.info "Listening on #{host}:#{port}..."
     end
   end
 
   def parse_options
     opts = OptionParser.new 
-    opts.on('-v', '--version')            { puts "watcher version #{VERSION}" ; exit 0 }
+    opts.on('-v', '--version')            { puts "Hercules version #{VERSION}" ; exit 0 }
     opts.on('-h', '--help')               { puts opts; exit 0  }
     opts.on('-V', '--verbose')            { @options.verbose = true }  
     opts.on('-f', '--foreground')         { @options.foreground = true }
