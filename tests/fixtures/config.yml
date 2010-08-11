@@ -1,0 +1,7 @@
+---
+test_project:
+  repository: file:///tmp/hercules_test_repository
+  test:
+    target_directory: /tmp/hercules_test_checkout
+    versions_to_keep: 5
+
