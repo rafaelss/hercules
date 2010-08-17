@@ -1,7 +1,7 @@
 ---
 test_project:
   repository: file:///tmp/hercules_test_repository
-  test:
-    target_directory: /tmp/hercules_test_checkout
+  target_directory: /tmp/hercules_test_checkout
+  master:
     versions_to_keep: 5
 
