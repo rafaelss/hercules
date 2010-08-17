@@ -22,7 +22,7 @@ class Hercules
     @options = OpenStruct.new
     @options.config_file = 'config.yml'
     @options.verbose = false
-    @options.log_file = false
+    @options.log_file = nil
     @options.pid_file = 'hercules.pid'
     @options.foreground = false
 
@@ -31,10 +31,10 @@ class Hercules
   end
 
   def run
-    parse_options      
-    set_logger      
-    be_verbose    
+    parse_options
+    set_logger
     read_config
+    be_verbose if @options.verbose
 
     # if -f is not present we fork into the background and write hercules.pid
     @options.foreground ? process_command : daemonize
@@ -52,9 +52,10 @@ class Hercules
   end
 
   def read_config    
+    @log.warn "Error reading config file #{@options.config_file}"
     begin
       @config = YAML.load_file( @options.config_file )       
-    rescue => e      
+    rescue Exception => e      
       @log.fatal "Error reading config file #{@options.config_file}: #{e.inspect}"
       exit
     end
