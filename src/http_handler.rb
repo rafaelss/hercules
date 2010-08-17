@@ -4,6 +4,7 @@ require 'rubygems'
 require 'eventmachine'
 require 'evma_httpserver'
 require 'json'
+require File.dirname(__FILE__) + '/request_handler'
 
 class HttpHandler < EventMachine::Connection
   include EventMachine::HttpServer
@@ -16,7 +17,8 @@ class HttpHandler < EventMachine::Connection
   def process_http_request
     resp = EventMachine::DelegatedHttpResponse.new( self )
     resp.status = 200
-    resp.content = "Hello World! Your post was: #{@http_post_content}"
+    RequestHandler.new @http_post_content
+    resp.content = ""
     resp.send_response
   end
 end
