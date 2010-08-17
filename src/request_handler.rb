@@ -14,7 +14,7 @@ class RequestHandler
     @body['repository']['url']
   end
 
-  def repository_branch
+  def branch
     @body['ref'].split('/').pop
   end
 end

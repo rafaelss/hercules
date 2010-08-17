@@ -51,7 +51,7 @@ class RequestHandlerTest < Test::Unit::TestCase
   def test_read_repository_attributes
     assert_equal @handler.repository_name, "github"
     assert_equal @handler.repository_url, "http://github.com/defunkt/github"
-    assert_equal @handler.repository_branch, "master"
+    assert_equal @handler.branch, "master"
   end
 end
 
