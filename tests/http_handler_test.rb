@@ -67,9 +67,20 @@ class HttpHandlerTest < Test::Unit::TestCase
       log_content = log.read()
       assert_match /Received POST/, log_content
       assert_no_match /Repository not found/, log_content
+      assert_no_match /Invalid token/, log_content
       assert_no_match /Repository not found/, res.body
       assert_is_checkout @config['test_project']['target_directory'] + '/environments/master'
     end
+  end
+
+  def test_invalid_token
+    post "invalid_token" do |res, log|
+      log_content = log.read()
+      assert_match /Received POST/, log_content
+      assert_match /Invalid token/, log_content
+      assert_match /Invalid token/, res.body
+    end
+    assert !File.exists?(@config['test_project']['target_directory'] + '/environments/master')
   end
 
   def test_repository_not_found
