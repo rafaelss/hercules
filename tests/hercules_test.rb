@@ -10,7 +10,7 @@ class HerculesTest < Test::Unit::TestCase
       sh "src/hercules.rb -l /dev/null > /dev/null 2>&1"
       assert !File.exist?(@pidfile)
       
-      # Test with an invalid yaml
+      # Test with an invalid  yaml
       sh "src/hercules.rb -c src/hercules.rb -l /dev/null > /dev/null 2>&1" rescue nil
       assert !File.exist?(@pidfile)
     end
@@ -19,7 +19,7 @@ class HerculesTest < Test::Unit::TestCase
   def test_logfile
     start_hercules do |pid,log|
       assert File.exist?(@logfile)
-      assert_match /Start/, log
+      assert_match /Start/, log.read()
     end
   end
 
@@ -29,4 +29,5 @@ class HerculesTest < Test::Unit::TestCase
       assert_match /\d+/, pid
     end
   end
+
 end

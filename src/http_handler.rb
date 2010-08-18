@@ -17,17 +17,24 @@ class HttpHandler < EventMachine::Connection
 
   def process_http_request
     resp = EventMachine::DelegatedHttpResponse.new( self )
-    yaml = YAML.load_file(@config.config_file)
+    @log.info "Received POST: #{@http_post_content}"
+    return send_404 resp, "POST content is null" if @http_post_content.nil?
+
     req = RequestHandler.new @http_post_content
-    if yaml.include? req.repository_name
-      resp.status = 200
-      git = GitHandler.new yaml[req.repository_name]
-      git.deploy_branch(req.branch)
-    else
-      resp.status = 404
-      resp.content = "Repository not found in config!"
-    end
-    resp.content = ""
+    return send_404 resp, "Repository not found in config" unless @config.include? req.repository_name
+
+    resp.status = 200
+    git = GitHandler.new @config[req.repository_name]
+    git.deploy_branch(req.branch)
+    resp.content = "Deploy"
+    resp.send_response
+    @log.info "Branch #{req.branch} deployed"
+  end
+
+  def send_404 resp, message
+    @log.info "404: #{message}"
+    resp.status = 404
+    resp.content = message
     resp.send_response
   end
 end

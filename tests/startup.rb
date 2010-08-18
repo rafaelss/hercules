@@ -19,7 +19,7 @@ module Startup
       begin
         sleep 3
         pid = File.open(@pidfile, 'r').read()
-        log = File.open(@logfile, 'r').read()
+        log = File.open(@logfile, 'r')
         yield(pid, log)
         sh "kill #{pid}"
         sleep 1

@@ -100,9 +100,9 @@ class Hercules
   def process_command
     EventMachine::run do
       EventMachine.epoll
-      host = "0.0.0.0"
-      port = 8080
-      EventMachine::start_server(host, port, HttpHandler, {:log => @log, :config => @options})
+      host = @config['host'] || "0.0.0.0"
+      port = @config['port'] || 8080
+      EventMachine::start_server(host, port, HttpHandler, {:log => @log, :config => @config})
       @log.info "Listening on #{host}:#{port}..."
     end
   end
