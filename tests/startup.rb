@@ -2,7 +2,7 @@
 
 # Test mailer startup reading a YAML file and requesting config info
 module Startup
-  def setup
+  def prepare_startup
     @logfile = 'tmp/test.log'
     @pidfile = 'hercules.pid'
   end

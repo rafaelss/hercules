@@ -4,6 +4,10 @@ require 'tests/startup'
 class HerculesTest < Test::Unit::TestCase
   include Startup
 
+  def setup
+    prepare_startup
+  end
+
   def test_startup_validations
     verbose(false) do
       # Here we test for config file require

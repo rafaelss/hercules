@@ -1,26 +1,29 @@
 # coding: utf-8
 require 'tests/startup'
+require 'tests/git_setup'
 require 'net/http'
 require 'uri'
 
 class HttpHandlerTest < Test::Unit::TestCase
   include Startup
+  include GitSetup
 
   def setup
-    super
+    prepare_startup
+    git_setup
     @json_request = %<
 {
   "before": "5aef35982fb2d34e9d9d4502f6ede1072793222d",
   "repository": {
-    "url": "http://github.com/defunkt/github",
+    "url": "file:///tmp/hercules_test_repository",
     "name": "test_project",
-    "description": "You're lookin' at it.",
+    "description": "test repository",
     "watchers": 5,
     "forks": 2,
     "private": 1,
     "owner": {
-      "email": "chris@ozmm.org",
-      "name": "defunkt"
+      "email": "diogob@gmail.com",
+      "name": "diogob"
     }
   },
   "commits": [
