@@ -52,7 +52,6 @@ class Hercules
   end
 
   def read_config    
-    @log.warn "Error reading config file #{@options.config_file}"
     begin
       @config = YAML.load_file( @options.config_file )       
     rescue Exception => e      
