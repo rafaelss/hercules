@@ -16,17 +16,17 @@ class GitHandler
     commit_dir
   end
 
-  def environments_path
-    "#{@options['target_directory']}/environments"
+  def branches_path
+    "#{@options['target_directory']}/branches"
   end
 
-  def create_environments_dir
-    FileUtils.mkdir_p environments_path
-    environments_path
+  def create_branches_dir
+    FileUtils.mkdir_p branches_path
+    branches_path
   end
 
   def deploy_branch(branch = 'master')
-    FileUtils.ln_sf(export_branch(branch), "#{create_environments_dir}/#{branch}")
+    FileUtils.ln_sf(export_branch(branch), "#{create_branches_dir}/#{branch}")
     self
   end
 end

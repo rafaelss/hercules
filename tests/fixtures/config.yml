@@ -4,5 +4,7 @@ test_project:
   repository: file:///tmp/hercules_test_repository
   target_directory: /tmp/hercules_test_checkout
   master:
-    versions_to_keep: 5
+    versions_to_keep: 1
+  test:
+    versions_to_keep: 3
 

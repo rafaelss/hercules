@@ -62,6 +62,11 @@ class HttpHandlerTest < Test::Unit::TestCase
     end
   end
 
+  def test_double_post
+    test_simple_post
+    test_simple_post
+  end
+
   def test_simple_post
     post "abc" do |res, log|
       log_content = log.read()
@@ -69,7 +74,7 @@ class HttpHandlerTest < Test::Unit::TestCase
       assert_no_match /Repository not found/, log_content
       assert_no_match /Invalid token/, log_content
       assert_no_match /Repository not found/, res.body
-      assert_is_checkout @config['test_project']['target_directory'] + '/environments/master'
+      assert_is_checkout @config['test_project']['target_directory'] + '/branches/master'
     end
   end
 
@@ -80,7 +85,7 @@ class HttpHandlerTest < Test::Unit::TestCase
       assert_match /Invalid token/, log_content
       assert_match /Invalid token/, res.body
     end
-    assert !File.exists?(@config['test_project']['target_directory'] + '/environments/master')
+    assert !File.exists?(@config['test_project']['target_directory'] + '/branches/master')
   end
 
   def test_repository_not_found
