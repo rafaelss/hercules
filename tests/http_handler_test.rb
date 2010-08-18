@@ -68,6 +68,7 @@ class HttpHandlerTest < Test::Unit::TestCase
       assert_match /Received POST/, log_content
       assert_no_match /Repository not found/, log_content
       assert_no_match /Repository not found/, res.body
+      assert_is_checkout @config['test_project']['target_directory'] + '/environments/master'
     end
   end
 
