@@ -3,7 +3,6 @@
 # Test mailer startup reading a YAML file and requesting config info
 module Startup
   def setup
-    @config = YAML.load_file( 'tmp/config.yml' ) 
     @logfile = 'tmp/test.log'
     @pidfile = 'hercules.pid'
   end
@@ -15,7 +14,7 @@ module Startup
 
   def start_hercules
     verbose(false) do
-      sh "src/hercules.rb -l tmp/test.log -V -c tmp/config.yml"
+      sh "src/hercules.rb -l tmp/test.log -V -c tests/fixtures/config.yml"
       begin
         sleep 3
         pid = File.open(@pidfile, 'r').read()
