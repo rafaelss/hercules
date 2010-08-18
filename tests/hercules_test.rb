@@ -8,10 +8,12 @@ class HerculesTest < Test::Unit::TestCase
     verbose(false) do
       # Here we test for config file require
       sh "src/hercules.rb -l /dev/null > /dev/null 2>&1"
+      sleep 1
       assert !File.exist?(@pidfile)
       
       # Test with an invalid  yaml
       sh "src/hercules.rb -c src/hercules.rb -l /dev/null > /dev/null 2>&1" rescue nil
+      sleep 1
       assert !File.exist?(@pidfile)
     end
   end
