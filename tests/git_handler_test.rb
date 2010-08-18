@@ -41,26 +41,15 @@ class GitHandlerTest < Test::Unit::TestCase
 
   def test_should_maintain_at_most_three_test_checkouts
     @g.branch('test').checkout
-    generate_commit 'new_commit1'
     g = GitHandler.new(@config['test_project'])
-    g.deploy_branch('test')
-    assert File.exists?(@config['test_project']['target_directory'] + '/branches/test/new_commit1')
-    assert_equal 3, Dir.entries(@config['test_project']['target_directory'] + '/checkouts/test').size
-    generate_commit 'new_commit2'
-    sleep 1
-    g.deploy_branch('test')
-    assert File.exists?(@config['test_project']['target_directory'] + '/branches/test/new_commit2')
-    assert_equal 4, Dir.entries(@config['test_project']['target_directory'] + '/checkouts/test').size
-    generate_commit 'new_commit3'
-    sleep 1
-    g.deploy_branch('test')
-    assert File.exists?(@config['test_project']['target_directory'] + '/branches/test/new_commit3')
-    assert_equal 5, Dir.entries(@config['test_project']['target_directory'] + '/checkouts/test').size
-    generate_commit 'new_commit4'
-    sleep 1
-    g.deploy_branch('test')
-    assert File.exists?(@config['test_project']['target_directory'] + '/branches/test/new_commit4')
-    assert_equal 5, Dir.entries(@config['test_project']['target_directory'] + '/checkouts/test').size
+    4.times do |t|
+      generate_commit "new_commit#{t}"
+      g.deploy_branch('test')
+      assert File.exists?(@config['test_project']['target_directory'] + "/branches/test/new_commit#{t}")
+      # The checkouts_to_keep in config.yml is set to 3 (so 5 is the maximum: 3 + '.' + '..')
+      assert_equal (3+t > 5 ? 5 : 3+t), Dir.entries(@config['test_project']['target_directory'] + '/checkouts/test').size
+      sleep 1
+    end
   end
 
   def test_should_maintain_only_one_master_checkout
