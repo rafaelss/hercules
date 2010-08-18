@@ -26,7 +26,22 @@ class GitHandler
   end
 
   def deploy_branch(branch = 'master')
-    FileUtils.ln_sf(export_branch(branch), "#{create_branches_dir}/#{branch}")
+    checkout = export_branch(branch)
+    #@todo here we must call the before deploy script
+    remove_old_checkouts branch
+    FileUtils.rm_f("#{create_branches_dir}/#{branch}")
+    FileUtils.ln_sf(checkout, "#{branches_path}/#{branch}")
     self
+  end
+
+  private
+  def remove_old_checkouts(branch)
+    max = @options[branch]['checkouts_to_keep']
+    dir = "#{@options['target_directory']}/checkouts/#{branch}"
+    if (Dir.entries(dir).size - 2) > max
+      # Here we must delete the oldest checkout
+      checkout_to_delete = Dir.glob("#{dir}/*").sort{|a,b| File.new(a).mtime.strftime("%Y%m%d%H%M%S") <=> File.new(b).mtime.strftime("%Y%m%d%H%M%S") }.shift
+      FileUtils.rm_r "#{checkout_to_delete}"
+    end
   end
 end
