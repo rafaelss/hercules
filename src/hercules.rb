@@ -67,6 +67,7 @@ class Hercules
     else
       @log = Logger.new(@options.log_file, 'daily')
     end
+    @log.level = Logger::INFO
   end
 
   def daemonize
@@ -124,7 +125,7 @@ class Hercules
     @options.marshal_dump.each do |name, val|        
       @log.info "  #{name} = #{val}"
     end
-    @log.level = Logger::INFO
+    @log.level = Logger::DEBUG
   end
 end
 

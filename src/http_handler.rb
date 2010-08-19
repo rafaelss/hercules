@@ -19,7 +19,7 @@ class HttpHandler < EventMachine::Connection
   def process_http_request
     resp = EventMachine::DelegatedHttpResponse.new( self )
     post = URI.unescape @http_post_content
-    @log.info "Received POST: #{post}"
+    @log.debug "Received POST: #{post}"
     return send_404 resp, "POST content is null" if post.nil?
 
     req = RequestHandler.new post.gsub(/^payload=/, "")
