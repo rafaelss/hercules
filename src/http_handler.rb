@@ -35,10 +35,19 @@ class HttpHandler < EventMachine::Connection
       git = GitHandler.new @config[req.repository_name]
       git.deploy_branch(req.branch) do |dir, branch|
         CommandRunner.new(@log).cd(dir){|c| c.run! "bundle install"}
+        if File.exists? "#{dir}/lib/deployer.rb"
+          require "#{dir}/lib/deployer.rb"
+          raise "Error during before_deploy" unless HerculesTriggers::Deployer.before_deploy({:path => dir})
+        end
       end
+      @log.warn "Branch #{req.branch} deployed"
+      dir = "#{git.branches_path}/#{req.branch}"
+      if File.exists? "#{dir}/lib/deployer.rb"
+        HerculesTriggers::Deployer.after_deploy({:path => dir})
+      end
+      @log.info "After deploy script executed"
       resp.content = "Deploy"
       resp.send_response
-      @log.warn "Branch #{req.branch} deployed"
     rescue Exception => e
       resp.status = 500
       resp.content = "Error during deploy: #{e.inspect}"

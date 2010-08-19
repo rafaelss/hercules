@@ -30,6 +30,24 @@ module GitSetup
     end
   end
 
+  def generate_deployer_false
+    @g.chdir do
+      FileUtils.mkdir_p("./lib")
+      FileUtils.cp(File.dirname(__FILE__) + '/fixtures/deployer_false.rb', "./lib/deployer.rb")
+      @g.add("./lib/deployer.rb")
+      @g.commit_all('Deployer false generated!')
+    end
+  end
+
+  def generate_deployer_true
+    @g.chdir do
+      FileUtils.mkdir_p("./lib")
+      FileUtils.cp(File.dirname(__FILE__) + '/fixtures/deployer_true.rb', "./lib/deployer.rb")
+      @g.add("./lib/deployer.rb")
+      @g.commit_all('Deployer true generated!')
+    end
+  end
+
   def generate_commit file_name
     head_sha = @head_sha
     @g.chdir do
