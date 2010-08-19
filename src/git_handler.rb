@@ -28,6 +28,7 @@ class GitHandler
   def deploy_branch(branch = 'master')
     checkout = export_branch(branch)
     #@todo here we must call the before deploy script
+    yield(checkout, branch) if block_given?
     remove_old_checkouts branch
     FileUtils.rm_f("#{create_branches_dir}/#{branch}")
     FileUtils.ln_sf(checkout, "#{branches_path}/#{branch}")

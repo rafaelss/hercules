@@ -6,6 +6,7 @@ require 'evma_httpserver'
 require 'json'
 require File.dirname(__FILE__) + '/request_handler'
 require File.dirname(__FILE__) + '/git_handler'
+require File.dirname(__FILE__) + '/command_runner'
 
 class HttpHandler < EventMachine::Connection
   include EventMachine::HttpServer
@@ -25,12 +26,21 @@ class HttpHandler < EventMachine::Connection
     return send_404 resp, "Repository not found in config" unless @config.include? req.repository_name
     return send_404 resp, "Invalid token" unless /\/#{@config[req.repository_name]['token']}$/ =~ @http_path_info
 
-    resp.status = 200
-    git = GitHandler.new @config[req.repository_name]
-    git.deploy_branch(req.branch)
-    resp.content = "Deploy"
-    resp.send_response
-    @log.info "Branch #{req.branch} deployed"
+    begin
+      resp.status = 200
+      git = GitHandler.new @config[req.repository_name]
+      git.deploy_branch(req.branch) do |dir, branch|
+        CommandRunner.new(@log).cd(dir){|c| c.run! "bundle install"}
+      end
+      resp.content = "Deploy"
+      resp.send_response
+      @log.warn "Branch #{req.branch} deployed"
+    rescue Exception => e
+      resp.status = 500
+      resp.content = "Error during deploy: #{e.inspect}"
+      resp.send_response
+      @log.error "Error while deploying branch #{req.branch}: #{e.inspect}"
+    end
   end
 
   def send_404 resp, message

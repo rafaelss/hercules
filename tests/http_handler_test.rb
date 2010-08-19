@@ -95,4 +95,14 @@ class HttpHandlerTest < Test::Unit::TestCase
       assert_match /Repository not found/, res.body
     end
   end
+
+  def test_could_not_install_gem
+    generate_bogus_gemfile
+    post "abc" do |res, log|
+      log_content = log.read()
+      assert_match /Received POST/, log_content
+      assert_match /Failed to run/, log_content
+    end
+    assert !File.exists?(@config['test_project']['target_directory'] + '/branches/master')
+  end
 end

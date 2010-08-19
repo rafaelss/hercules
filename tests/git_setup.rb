@@ -10,13 +10,23 @@ module GitSetup
     FileUtils.rm_rf(@config['test_project']['target_directory'])
     FileUtils.mkdir_p(dir)
     FileUtils.cp(File.dirname(__FILE__) + '/fixtures/config.yml', "#{dir}/config.yml")
+    FileUtils.cp(File.dirname(__FILE__) + '/fixtures/Gemfile', "#{dir}/Gemfile")
     @g = Git.init(dir)
     @g.chdir do
       @g.config('user.name', 'Test User')
       @g.config('user.email', 'email@email.com')
       @g.add("./config.yml")
+      @g.add("./Gemfile")
       @g.commit_all('message')
       @head_sha = @g.gcommit('HEAD').sha
+    end
+  end
+
+  def generate_bogus_gemfile
+    @g.chdir do
+      File.open('./Gemfile', 'a'){|f| f.write('gem "Gem_That_Does_Not_Exist", "0.0.0"') }
+      @g.add("./Gemfile")
+      @g.commit_all('Bogus gemfile generated!')
     end
   end
 
