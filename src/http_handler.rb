@@ -26,6 +26,10 @@ class HttpHandler < EventMachine::Connection
     return send_404 resp, "Repository not found in config" unless @config.include? req.repository_name
     return send_404 resp, "Invalid token" unless /\/#{@config[req.repository_name]['token']}$/ =~ @http_path_info
 
+    deploy resp, req
+  end
+
+  def deploy resp, req
     begin
       resp.status = 200
       git = GitHandler.new @config[req.repository_name]
