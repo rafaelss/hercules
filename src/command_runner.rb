@@ -34,6 +34,7 @@ class CommandRunner
       @logger.error(result.output.inspect)
       raise Error, "Failed to run '#{command}'"
     end
+    @logger.info(result.output.inspect)
 
     result
   end
