@@ -1,7 +1,8 @@
 # Hercules
       
   Very simple deployment tool. It was made to deploy rails applications using github, bundler.
-  This project is in it's early stages of development, so it is not usable yet.
+  This project is in it's early stages of development, so it can be a little rough.
+  There will be a gem as soon as it's a little more polished.
   
 ## Features
 
