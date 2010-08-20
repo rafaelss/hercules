@@ -37,21 +37,25 @@ class HttpHandler < EventMachine::Connection
         CommandRunner.new(@log).cd(dir){|c| c.run! "bundle install"}
         if File.exists? "#{dir}/lib/deployer.rb"
           require "#{dir}/lib/deployer.rb"
-          begin
-            raise "Error during before_deploy" unless HerculesTriggers::Deployer.before_deploy({:path => dir})
-          rescue NameError => e
-            # We have to allow the use of a lib/deployer.rb unrelated to Hercules
-            @log.warn "File lib/deployer.rb without HerculesTriggers::Deployer"
+          Dir.chdir(dir) do
+            begin
+              raise "Error during before_deploy" unless HerculesTriggers::Deployer.before_deploy({:path => dir})
+            rescue NameError => e
+              # We have to allow the use of a lib/deployer.rb unrelated to Hercules
+              @log.warn "File lib/deployer.rb without HerculesTriggers::Deployer"
+            end
           end
         end
       end
       @log.warn "Branch #{req.branch} deployed"
       dir = "#{git.branches_path}/#{req.branch}"
       if File.exists? "#{dir}/lib/deployer.rb"
-        begin
-          HerculesTriggers::Deployer.after_deploy({:path => dir})
-        rescue NameError => e
-          @log.warn "File lib/deployer.rb without HerculesTriggers::Deployer"
+        Dir.chdir(dir) do
+          begin
+            HerculesTriggers::Deployer.after_deploy({:path => dir})
+          rescue NameError => e
+            @log.warn "File lib/deployer.rb without HerculesTriggers::Deployer"
+          end
         end
       end
       @log.info "After deploy script executed"

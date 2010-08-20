@@ -42,6 +42,13 @@ module GitSetup
     end
   end
 
+  def generate_deployer_path
+    change_repository do
+      FileUtils.mkdir_p("./lib")
+      FileUtils.cp(File.dirname(__FILE__) + '/fixtures/deployer_path.rb', "./lib/deployer.rb")
+    end
+  end
+
   def generate_bogus_deployer
     change_repository do
       FileUtils.mkdir_p("./lib")
