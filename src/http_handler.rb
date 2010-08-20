@@ -42,7 +42,7 @@ class HttpHandler < EventMachine::Connection
               raise "Error during before_deploy" unless HerculesTriggers::Deployer.before_deploy({:path => dir})
             rescue NameError => e
               # We have to allow the use of a lib/deployer.rb unrelated to Hercules
-              @log.warn "File lib/deployer.rb without HerculesTriggers::Deployer"
+              @log.warn "File lib/deployer.rb without HerculesTriggers::Deployer: #{e.inspect}"
             end
           end
         end
