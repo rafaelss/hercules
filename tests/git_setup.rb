@@ -23,46 +23,42 @@ module GitSetup
   end
 
   def generate_bogus_gemfile
-    @g.chdir do
+    change_repository do
       File.open('./Gemfile', 'a'){|f| f.write('gem "Gem_That_Does_Not_Exist", "0.0.0"') }
-      @g.add("./Gemfile")
-      @g.commit_all('Bogus gemfile generated!')
     end
   end
 
   def generate_deployer_false
-    @g.chdir do
+    change_repository do
       FileUtils.mkdir_p("./lib")
       FileUtils.cp(File.dirname(__FILE__) + '/fixtures/deployer_false.rb', "./lib/deployer.rb")
-      @g.add("./lib/deployer.rb")
-      @g.commit_all('Deployer false generated!')
     end
   end
 
   def generate_deployer_true
-    @g.chdir do
+    change_repository do
       FileUtils.mkdir_p("./lib")
       FileUtils.cp(File.dirname(__FILE__) + '/fixtures/deployer_true.rb', "./lib/deployer.rb")
-      @g.add("./lib/deployer.rb")
-      @g.commit_all('Deployer true generated!')
     end
   end
 
   def generate_bogus_deployer
-    @g.chdir do
+    change_repository do
       FileUtils.mkdir_p("./lib")
       FileUtils.cp(File.dirname(__FILE__) + '/fixtures/bogus_deployer.rb', "./lib/deployer.rb")
-      @g.add("./lib/deployer.rb")
-      @g.commit_all('Bogus deployer generated!')
     end
   end
 
   def generate_commit file_name
+    change_repository{ FileUtils.touch file_name }
+  end
+
+  def change_repository
     head_sha = @head_sha
     @g.chdir do
-      FileUtils.touch file_name
-      @g.add("./#{file_name}")
-      @g.commit_all("added file: #{file_name}")
+      yield
+      @g.add("./*")
+      @g.commit_all("added files")
       head_sha = @g.gcommit('HEAD').sha
     end
     return head_sha
