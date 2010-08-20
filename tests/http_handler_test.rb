@@ -126,4 +126,15 @@ class HttpHandlerTest < Test::Unit::TestCase
     assert File.exists?(@config['test_project']['target_directory'] + '/branches/master')
     assert File.exists?(@config['test_project']['target_directory'] + '/branches/master/after_deploy')
   end
+
+  def test_bogus_deployer
+    generate_bogus_deployer
+    post "abc" do |res, log|
+      log_content = log.read()
+      assert_match /Received POST/, log_content
+      assert_no_match /Error while deploying/, log_content
+      assert_match /File lib\/deployer\.rb without HerculesTriggers::Deployer/, log_content
+    end
+    assert File.exists?(@config['test_project']['target_directory'] + '/branches/master')
+  end
 end

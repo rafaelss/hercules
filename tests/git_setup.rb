@@ -48,6 +48,15 @@ module GitSetup
     end
   end
 
+  def generate_bogus_deployer
+    @g.chdir do
+      FileUtils.mkdir_p("./lib")
+      FileUtils.cp(File.dirname(__FILE__) + '/fixtures/bogus_deployer.rb', "./lib/deployer.rb")
+      @g.add("./lib/deployer.rb")
+      @g.commit_all('Bogus deployer generated!')
+    end
+  end
+
   def generate_commit file_name
     head_sha = @head_sha
     @g.chdir do
