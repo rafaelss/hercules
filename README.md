@@ -18,3 +18,22 @@
   
       $ ruby src/hercules.rb
 
+  Take a look at tests/fixtures/config.yml for a sample configuration file and at tests/fixtures/deployer_true.rb for a sample deployer script.
+
+## The deploy hooks
+  The deployer scripts should be inside lib/deployer.rb
+  Hercules implements two deploy hooks so far: before_deploy and after_deploy.
+  They should be coded inside a module called HerculesTriggers in a class Deployer as class methods, moreover they receive an options parameter which contains the path key with the complete deployment path.
+  If you do not have a HerculesTriggers module you can use the file lib/deployer.rb and it will be ignored by the deployer.
+
+      module HerculesTriggers
+        class Deployer
+          def self.before_deploy(options)
+            `cp config/database.sample.yml config/database.yml`
+          end
+          def self.after_deploy(options)
+            `kill -HUP \`cat /var/run/unicorn/development.pid\``
+          end
+        end
+      end
+
