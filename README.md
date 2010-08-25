@@ -14,8 +14,10 @@
 ## Installation
 
   For now you have to clone the repository [hercules](http://github.com/diogob/hercules)
-  and run:
+  and run in the application root directory:
   
+      $ sudo gem install bundler
+      $ bundle install
       $ ruby src/hercules.rb
 
   Take a look at tests/fixtures/config.yml for a sample configuration file and at tests/fixtures/deployer_true.rb for a sample deployer script.
