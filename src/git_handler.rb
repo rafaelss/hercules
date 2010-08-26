@@ -12,7 +12,7 @@ class GitHandler
       repo = Git.clone(@options['repository'], tmp_dir, {:depth => 1})
       repo.checkout("origin/#{branch}")
     rescue Exception => e
-      FileUtils.rm_rf repo.dir.to_s
+      FileUtils.rm_rf repo.dir.to_s unless repo.nil?
       raise "Error while cloning #{@options['repository']}: #{e}"
     end
     commit_dir = "#{@options['target_directory']}/checkouts/#{branch}/#{repo.gcommit('HEAD').sha}"

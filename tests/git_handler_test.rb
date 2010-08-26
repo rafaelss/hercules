@@ -23,6 +23,18 @@ class GitHandlerTest < Test::Unit::TestCase
     assert_equal 0, Dir.glob(@config['test_project']['target_directory'] + '/checkouts/branch_that_will_not_exist/*').size
   end
 
+  def test_export_non_existent_or_invalid_repository
+    @config['test_project']['repository'] = 'repository_that_does_not_exist_or_is_invalid'
+    g = GitHandler.new(@config['test_project'])
+    begin
+      g.export_branch('branch_that_will_not_exist')
+      assert false
+    rescue Exception => e
+      assert_match /Error while cloning/, e.message
+    end
+
+  end
+
   def test_create_branches_dir
     g = GitHandler.new(@config['test_project'])
     g.create_branches_dir
