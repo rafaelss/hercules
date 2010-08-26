@@ -15,6 +15,14 @@ class GitHandlerTest < Test::Unit::TestCase
     assert_is_checkout @config['test_project']['target_directory'] + '/checkouts/master/' + @head_sha
   end
 
+  def test_export_non_existent_branch
+    g = GitHandler.new(@config['test_project'])
+    g.export_branch('branch_that_will_not_exist') rescue nil
+    assert !File.exists?(@config['test_project']['target_directory'] + '/checkouts/branch_that_will_not_exist/' + @head_sha)
+    assert_equal 2, Dir.glob(@config['test_project']['target_directory'] + '/checkouts/branch_that_will_not_exist/.*').size
+    assert_equal 0, Dir.glob(@config['test_project']['target_directory'] + '/checkouts/branch_that_will_not_exist/*').size
+  end
+
   def test_create_branches_dir
     g = GitHandler.new(@config['test_project'])
     g.create_branches_dir

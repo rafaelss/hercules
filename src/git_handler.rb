@@ -8,8 +8,13 @@ class GitHandler
 
   def export_branch(branch = 'master')
     tmp_dir = "#{@options['target_directory']}/checkouts/#{branch}/.tmp"
-    repo = Git.clone(@options['repository'], tmp_dir, {:depth => 1})
-    repo.checkout("origin/#{branch}")
+    begin
+      repo = Git.clone(@options['repository'], tmp_dir, {:depth => 1})
+      repo.checkout("origin/#{branch}")
+    rescue Exception => e
+      FileUtils.rm_rf repo.dir.to_s
+      raise "Error while cloning #{@options['repository']}: #{e}"
+    end
     commit_dir = "#{@options['target_directory']}/checkouts/#{branch}/#{repo.gcommit('HEAD').sha}"
     Dir.chdir(repo.dir.to_s) { FileUtils.rm_r '.git' }
     FileUtils.mv repo.dir.to_s, commit_dir

@@ -67,7 +67,7 @@ class HttpHandler < EventMachine::Connection
       resp.status = 500
       resp.content = "Error during deploy: #{e.inspect}"
       resp.send_response
-      @log.error "Error while deploying branch #{req.branch}: #{e.inspect}"
+      @log.error "Error while deploying branch #{req.branch}: #{e.inspect} \nBacktrace: #{e.backtrace}"
     end
   end
 
