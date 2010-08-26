@@ -7,7 +7,7 @@ class GitHandler
   end
 
   def export_branch(branch = 'master')
-    tmp_dir = "#{@options['target_directory']}/checkouts/#{branch}/.tmp"
+    tmp_dir = "#{@options['target_directory']}/checkouts/#{branch}/.tmp_#{Time.now.strftime("%Y%m%d%H%M%S")}"
     begin
       repo = Git.clone(@options['repository'], tmp_dir, {:depth => 1})
       repo.checkout("origin/#{branch}")
