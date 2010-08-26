@@ -96,6 +96,14 @@ class HttpHandlerTest < Test::Unit::TestCase
     end
   end
 
+  def test_branch_not_found
+    @json_request = @json_request.gsub(/master/, "branch_that_does_not_exist")
+    post "abc" do |res, log|
+      assert_match /Branch not found/, log.read()
+      assert_match /Branch not found/, res.body
+    end
+  end
+
   def test_could_not_install_gem
     generate_bogus_gemfile
     post "abc" do |res, log|
