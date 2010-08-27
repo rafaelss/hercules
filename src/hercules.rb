@@ -28,6 +28,7 @@ class Hercules
 
     @config = nil
     @pid_file = nil
+    @log = nil
   end
 
   def run
@@ -43,6 +44,12 @@ class Hercules
 
 
   protected
+  def exit_gracefully
+    remove_pid
+    @log.info "Terminating hercules..." 
+    @log.close unless @log.nil? rescue nil
+    exit 0
+  end
 
   def remove_pid
     if !@pid_file.nil? and File.exist? @pid_file
@@ -99,6 +106,9 @@ class Hercules
 
   def process_command
     EventMachine::run do
+      Signal.trap("TERM") do 
+        exit_gracefully
+      end
       EventMachine.epoll
       host = @config['host'] || "0.0.0.0"
       port = @config['port'] || 8080

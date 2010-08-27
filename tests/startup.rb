@@ -12,15 +12,15 @@ module Startup
     File.unlink @pidfile if File.exist?(@pidfile)
   end
 
-  def start_hercules
+  def start_hercules config = 'tests/fixtures/config.yml'
     verbose(false) do
-      sh "src/hercules.rb -l tmp/test.log -V -c tests/fixtures/config.yml"
+      sh "src/hercules.rb -l tmp/test.log -V -c " + config
       begin
         sleep 3
         pid = File.open(@pidfile, 'r').read()
         log = File.open(@logfile, 'r')
         yield(pid, log)
-        sh "kill #{pid}"
+        sh "kill #{pid} >/dev/null 2>&1" rescue nil
         sleep 1
         assert !File.exist?('tmp/hercules.pid'), "PID file still exists after daemon shutdown"
       ensure

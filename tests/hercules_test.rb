@@ -22,18 +22,21 @@ class HerculesTest < Test::Unit::TestCase
     end
   end
 
-  def test_logfile
+  def test_logfile_and_piddir
     start_hercules do |pid,log|
       assert File.exist?(@logfile)
       assert_match /Start/, log.read()
-    end
-  end
-
-  def test_piddir
-    start_hercules do |pid,log|
       assert File.exist?(@pidfile)
       assert_match /\d+/, pid
     end
   end
 
+  def test_send_term
+    start_hercules do |pid,log|
+      Process.kill("TERM", pid.to_i)
+      sleep 1
+      assert !File.exist?(@pidfile)
+      assert_match /Terminating hercules/, log.read
+    end
+  end
 end
