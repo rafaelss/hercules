@@ -175,4 +175,15 @@ class HttpHandlerTest < Test::Unit::TestCase
     end
     assert !File.exists?(@config['test_project']['target_directory'] + '/branches/master')
   end
+
+  def test_deployer_branch
+    generate_deployer "deployer_branch"
+    post "abc" do |res, log|
+      log_content = log.read()
+      assert_match /Received POST/, log_content
+      assert_no_match /Error while deploying/, log_content
+    end
+    assert File.exists?(@config['test_project']['target_directory'] + '/branches/master')
+    assert File.exists?(@config['test_project']['target_directory'] + '/branches/master/branch_name_master')
+  end
 end

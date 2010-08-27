@@ -40,7 +40,7 @@ class HttpHandler < EventMachine::Connection
           require "#{dir}/lib/deployer.rb"
           Dir.chdir(dir) do
             begin
-              raise "Error during before_deploy" unless HerculesTriggers::Deployer.before_deploy({:path => dir})
+              raise "Error during before_deploy" unless HerculesTriggers::Deployer.before_deploy({:path => dir, :branch => branch})
             rescue NameError => e
               # We have to allow the use of a lib/deployer.rb unrelated to Hercules
               raise "Error during before_deploy: #{e.message}" if e.message != 'uninitialized constant HttpHandler::HerculesTriggers'
@@ -54,7 +54,7 @@ class HttpHandler < EventMachine::Connection
       if File.exists? "#{dir}/lib/deployer.rb"
         Dir.chdir(dir) do
           begin
-            HerculesTriggers::Deployer.after_deploy({:path => dir})
+            HerculesTriggers::Deployer.after_deploy({:path => dir, :branch => req.branch})
           rescue NameError => e
             raise "Error during before_deploy: #{e.message}" if e.message != 'uninitialized constant HttpHandler::HerculesTriggers'
             @log.warn "File lib/deployer.rb without HerculesTriggers::Deployer"
