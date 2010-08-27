@@ -41,7 +41,7 @@
 
 ### Canceling the deploy
   If the before_deploy hook returns anything that evaluate as false the deploy will be cancelled.
-  The return value of after_deploy is ignored.
+  The return value of after_deploy is ignored.  
   Also, you cannot create a Deployer class without all the hooks, so if you want an empty before_deploy but still want to use the after_deploy you should do:
 
       module HerculesTriggers
