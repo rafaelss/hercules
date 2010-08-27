@@ -57,7 +57,6 @@ class HttpHandlerTest < Test::Unit::TestCase
   def post token
     start_hercules do |pid,log|
       res = Net::HTTP.post_form(URI.parse("http://127.0.0.1:8080/#{token}"), {'payload' => @json_request})
-      sleep 1
       yield res, log
     end
   end
@@ -115,7 +114,7 @@ class HttpHandlerTest < Test::Unit::TestCase
   end
 
   def test_deployer_false
-    generate_deployer_false
+    generate_deployer "deployer_false"
     post "abc" do |res, log|
       log_content = log.read()
       assert_match /Received POST/, log_content
@@ -125,7 +124,7 @@ class HttpHandlerTest < Test::Unit::TestCase
   end
 
   def test_deployer_true
-    generate_deployer_true
+    generate_deployer "deployer_true"
     post "abc" do |res, log|
       log_content = log.read()
       assert_match /Received POST/, log_content
@@ -136,7 +135,7 @@ class HttpHandlerTest < Test::Unit::TestCase
   end
 
   def test_bogus_deployer
-    generate_bogus_deployer
+    generate_deployer "bogus_deployer"
     post "abc" do |res, log|
       log_content = log.read()
       assert_match /Received POST/, log_content
@@ -147,7 +146,7 @@ class HttpHandlerTest < Test::Unit::TestCase
   end
 
   def test_deployer_path
-    generate_deployer_path
+    generate_deployer "deployer_path"
     post "abc" do |res, log|
       log_content = log.read()
       assert_match /Received POST/, log_content
@@ -158,7 +157,7 @@ class HttpHandlerTest < Test::Unit::TestCase
   end
 
   def test_deployer_exception
-    generate_deployer_exception
+    generate_deployer "deployer_exception"
     post "abc" do |res, log|
       log_content = log.read()
       assert_match /Received POST/, log_content
@@ -168,7 +167,7 @@ class HttpHandlerTest < Test::Unit::TestCase
   end
 
   def test_deployer_undefined_variable
-    generate_deployer_undefined_variable
+    generate_deployer "deployer_undefined_variable"
     post "abc" do |res, log|
       log_content = log.read()
       assert_match /Received POST/, log_content
@@ -176,5 +175,4 @@ class HttpHandlerTest < Test::Unit::TestCase
     end
     assert !File.exists?(@config['test_project']['target_directory'] + '/branches/master')
   end
-
 end

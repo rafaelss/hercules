@@ -24,49 +24,15 @@ module GitSetup
 
   def generate_bogus_gemfile
     change_repository do
-      File.open('./Gemfile', 'a'){|f| f.write('gem "Gem_That_Does_Not_Exist", "0.0.0"') }
+      File.open('./Gemfile', 'a'){|f| f.write('gem syntax error "Gem_That_Does_Not_Exist", "0.0.0"') }
     end
   end
 
-  def generate_deployer_false
+  def generate_deployer(deployer_name)
+    path = File.expand_path( File.dirname(__FILE__) )
     change_repository do
       FileUtils.mkdir_p("./lib")
-      FileUtils.cp(File.dirname(__FILE__) + '/fixtures/deployer_false.rb', "./lib/deployer.rb")
-    end
-  end
-
-  def generate_deployer_true
-    change_repository do
-      FileUtils.mkdir_p("./lib")
-      FileUtils.cp(File.dirname(__FILE__) + '/fixtures/deployer_true.rb', "./lib/deployer.rb")
-    end
-  end
-
-  def generate_deployer_path
-    change_repository do
-      FileUtils.mkdir_p("./lib")
-      FileUtils.cp(File.dirname(__FILE__) + '/fixtures/deployer_path.rb', "./lib/deployer.rb")
-    end
-  end
-
-  def generate_deployer_exception
-    change_repository do
-      FileUtils.mkdir_p("./lib")
-      FileUtils.cp(File.dirname(__FILE__) + '/fixtures/deployer_exception.rb', "./lib/deployer.rb")
-    end
-  end
-
-  def generate_deployer_undefined_variable
-    change_repository do
-      FileUtils.mkdir_p("./lib")
-      FileUtils.cp(File.dirname(__FILE__) + '/fixtures/deployer_undefined_variable.rb', "./lib/deployer.rb")
-    end
-  end
-
-  def generate_bogus_deployer
-    change_repository do
-      FileUtils.mkdir_p("./lib")
-      FileUtils.cp(File.dirname(__FILE__) + '/fixtures/bogus_deployer.rb', "./lib/deployer.rb")
+      FileUtils.cp("#{path}/fixtures/#{deployer_name}.rb", "./lib/deployer.rb")
     end
   end
 

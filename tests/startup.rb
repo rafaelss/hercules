@@ -16,16 +16,16 @@ module Startup
     verbose(false) do
       sh "src/hercules.rb -l tmp/test.log -V -c " + config
       begin
-        sleep 3
+        sleep 1
         pid = File.open(@pidfile, 'r').read()
         log = File.open(@logfile, 'r')
         yield(pid, log)
-        sh "kill #{pid} >/dev/null 2>&1" rescue nil
+        sh "kill -KILL #{pid} >/dev/null 2>&1" rescue nil
         sleep 1
         assert !File.exist?('tmp/hercules.pid'), "PID file still exists after daemon shutdown"
       ensure
         # just to make sure we always kill the test instances
-        sh "kill #{pid} >/dev/null 2>&1" rescue nil
+        sh "kill -KILL #{pid} >/dev/null 2>&1" rescue nil
         cleanup
       end
     end
