@@ -58,12 +58,22 @@ class Hercules
     end
   end
 
+  def reload_config    
+    begin
+      @log.info "Reloading config file #{@options.config_file}..." 
+      @config = YAML.load_file( @options.config_file )       
+      @log.info "Configuration updated." 
+    rescue Exception => e      
+      @log.error "Error reading config file #{@options.config_file}: #{e.inspect}"
+    end
+  end
+
   def read_config    
     begin
       @config = YAML.load_file( @options.config_file )       
     rescue Exception => e      
       @log.fatal "Error reading config file #{@options.config_file}: #{e.inspect}"
-      exit
+      exit -1
     end
   end
 
@@ -106,9 +116,8 @@ class Hercules
 
   def process_command
     EventMachine::run do
-      Signal.trap("TERM") do 
-        exit_gracefully
-      end
+      Signal.trap("TERM"){ exit_gracefully }
+      Signal.trap("HUP"){ reload_config }
       EventMachine.epoll
       host = @config['host'] || "0.0.0.0"
       port = @config['port'] || 8080

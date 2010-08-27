@@ -1,0 +1,9 @@
+ $%#$% 
+  token-> abc
+  repository: file:///tmp/hercules_test_repository
+  target_directory: /tmp/hercules_test_checkout
+  master:
+    checkouts_to_keep: 1
+  test:
+    checkouts_to_keep: 3
+
