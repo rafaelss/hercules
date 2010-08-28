@@ -20,19 +20,18 @@ class HttpHandler < EventMachine::Connection
     resp = EventMachine::DelegatedHttpResponse.new( self )
     post = URI.unescape @http_post_content
     @log.debug "Received POST: #{post}"
-    return send_404(resp, "POST content is null") if post.nil?
+    return send(resp, 404, "POST content is null") if post.nil?
 
     req = RequestHandler.new post.gsub(/^payload=/, "")
-    return send_404(resp, "Repository not found in config") unless @config.include? req.repository_name
-    return send_404(resp, "Branch not found in config") unless @config[req.repository_name].include? req.branch
-    return send_404(resp, "Invalid token") unless /\/#{@config[req.repository_name]['token']}$/ =~ @http_path_info
+    return send(resp, 404, "Repository not found in config") unless @config.include? req.repository_name
+    return send(resp, 404, "Branch not found in config") unless @config[req.repository_name].include? req.branch
+    return send(resp, 404, "Invalid token") unless /\/#{@config[req.repository_name]['token']}$/ =~ @http_path_info
 
     deploy resp, req
   end
 
   def deploy resp, req
     begin
-      resp.status = 200
       git = GitHandler.new @config[req.repository_name]
       git.deploy_branch(req.branch) do |dir, branch|
         CommandRunner.new(@log).cd(dir){|c| c.run! "bundle install"}
@@ -62,19 +61,16 @@ class HttpHandler < EventMachine::Connection
         end
       end
       @log.info "After deploy script executed"
-      resp.content = "Deploy"
-      resp.send_response
+      send resp, 200, "Deploy ok"
     rescue Exception => e
-      resp.status = 500
-      resp.content = "Error during deploy: #{e.inspect}"
-      resp.send_response
       @log.error "Error while deploying branch #{req.branch}: #{e.inspect} \nBacktrace: #{e.backtrace}"
+      send resp, 500, "Error during deploy: #{e.inspect}"
     end
   end
 
-  def send_404 resp, message
-    @log.info "404: #{message}"
-    resp.status = 404
+  def send resp, status, message
+    @log.info "#{status}: #{message}"
+    resp.status = status
     resp.content = message
     resp.send_response
   end
