@@ -20,12 +20,12 @@ class HttpHandler < EventMachine::Connection
     resp = EventMachine::DelegatedHttpResponse.new( self )
     post = URI.unescape @http_post_content
     @log.debug "Received POST: #{post}"
-    return send_404 resp, "POST content is null" if post.nil?
+    return send_404(resp, "POST content is null") if post.nil?
 
     req = RequestHandler.new post.gsub(/^payload=/, "")
-    return send_404 resp, "Repository not found in config" unless @config.include? req.repository_name
-    return send_404 resp, "Branch not found in config" unless @config[req.repository_name].include? req.branch
-    return send_404 resp, "Invalid token" unless /\/#{@config[req.repository_name]['token']}$/ =~ @http_path_info
+    return send_404(resp, "Repository not found in config") unless @config.include? req.repository_name
+    return send_404(resp, "Branch not found in config") unless @config[req.repository_name].include? req.branch
+    return send_404(resp, "Invalid token") unless /\/#{@config[req.repository_name]['token']}$/ =~ @http_path_info
 
     deploy resp, req
   end
