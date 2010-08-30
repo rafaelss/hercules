@@ -17,17 +17,22 @@ class HttpHandler < EventMachine::Connection
   end
 
   def process_http_request
-    resp = EventMachine::DelegatedHttpResponse.new( self )
-    post = URI.unescape @http_post_content
-    @log.debug "Received POST: #{post}"
-    return send(resp, 404, "POST content is null") if post.nil?
+    begin
+      resp = EventMachine::DelegatedHttpResponse.new( self )
+      post = URI.unescape @http_post_content
+      @log.debug "Received POST: #{post}"
+      return send(resp, 404, "POST content is null") if post.nil?
 
-    req = RequestHandler.new post.gsub(/^payload=/, "")
-    return send(resp, 404, "Repository not found in config") unless @config.include? req.repository_name
-    return send(resp, 404, "Branch not found in config") unless @config[req.repository_name].include? req.branch
-    return send(resp, 404, "Invalid token") unless /\/#{@config[req.repository_name]['token']}$/ =~ @http_path_info
+      req = RequestHandler.new post.gsub(/^payload=/, "")
+      return send(resp, 404, "Repository not found in config") unless @config.include? req.repository_name
+      return send(resp, 404, "Branch not found in config") unless @config[req.repository_name].include? req.branch
+      return send(resp, 404, "Invalid token") unless /\/#{@config[req.repository_name]['token']}$/ =~ @http_path_info
 
-    deploy resp, req
+      deploy resp, req
+    rescue Exception => e
+      @log.error "Error while processing HTTP request: #{e.inspect} \nREQUEST: #{@http_request_method} #{@http_path_info}?#{@http_query_string}\n#{@http_post_content} \nBacktrace: #{e.backtrace}"
+      send resp, 500, "Error processing http request: #{e.inspect}"
+    end
   end
 
   def deploy resp, req
