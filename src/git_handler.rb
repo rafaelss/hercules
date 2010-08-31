@@ -44,7 +44,7 @@ class GitHandler
   def remove_old_checkouts(branch)
     max = @options[branch]['checkouts_to_keep']
     dir = "#{@options['target_directory']}/checkouts/#{branch}"
-    if (Dir.entries(dir).size - 2) > max
+    if (Dir.glob("#{dir}/*").size) > max
       # Here we must delete the oldest checkout
       checkout_to_delete = Dir.glob("#{dir}/*").sort{|a,b| File.new(a).mtime.strftime("%Y%m%d%H%M%S") <=> File.new(b).mtime.strftime("%Y%m%d%H%M%S") }.shift
       FileUtils.rm_r "#{checkout_to_delete}"
