@@ -70,9 +70,9 @@ class HttpHandlerTest < Test::Unit::TestCase
     post "abc" do |res, log|
       log_content = log.read()
       assert_match /Received POST/, log_content
-      assert_no_match /Repository not found/, log_content
+      assert_no_match /Repository .* not found/, log_content
       assert_no_match /Invalid token/, log_content
-      assert_no_match /Repository not found/, res.body
+      assert_no_match /Repository .* not found/, res.body
       assert_is_checkout @config['test_project']['target_directory'] + '/branches/master'
     end
   end
@@ -90,16 +90,16 @@ class HttpHandlerTest < Test::Unit::TestCase
   def test_repository_not_found
     @json_request = @json_request.gsub(/test_project/, "project_that_does_not_exist")
     post "abc" do |res, log|
-      assert_match /Repository not found/, log.read()
-      assert_match /Repository not found/, res.body
+      assert_match /Repository .* not found/, log.read()
+      assert_match /Repository .* not found/, res.body
     end
   end
 
   def test_branch_not_found
     @json_request = @json_request.gsub(/master/, "branch_that_does_not_exist")
     post "abc" do |res, log|
-      assert_match /Branch not found/, log.read()
-      assert_match /Branch not found/, res.body
+      assert_match /Branch .* not found/, log.read()
+      assert_match /Branch .* not found/, res.body
     end
   end
 

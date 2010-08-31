@@ -75,7 +75,7 @@ class HerculesTest < Test::Unit::TestCase
     start_hercules do |pid,log|
       FileUtils.mv "tests/fixtures/config.yml", "tests/fixtures/startup_checkout_config.yml"
       FileUtils.mv "tests/fixtures/config.old.yml", "tests/fixtures/config.yml"
-      sleep 3
+      sleep 10
       log_content = log.read
       assert_match /Branch master deployed/, log_content
       assert_is_checkout @config['test_project']['target_directory'] + '/branches/master'
@@ -90,7 +90,7 @@ class HerculesTest < Test::Unit::TestCase
     start_hercules do |pid,log|
       FileUtils.mv "tests/fixtures/config.yml", "tests/fixtures/startup_checkout_config.yml"
       FileUtils.mv "tests/fixtures/config.old.yml", "tests/fixtures/config.yml"
-      sleep 3
+      sleep 10
       log_content = log.read
       assert_match /Branch master deployed/, log_content
       assert_is_checkout @config['test_project']['target_directory'] + '/branches/master'

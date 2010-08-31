@@ -23,14 +23,13 @@ class HttpHandler < EventMachine::Connection
       return send(resp, 404, "POST content is null") if post.nil?
 
       req = RequestHandler.new post.gsub(/^payload=/, "")
-      return send(resp, 404, "Repository not found in config") unless @config.include? req.repository_name
-      return send(resp, 404, "Branch not found in config") unless @config[req.repository_name].include? req.branch
+      return send(resp, 404, "Repository #{req.repository_name} not found in config") unless @config.include? req.repository_name
+      return send(resp, 404, "Branch #{req.branch} not found in config") unless @config[req.repository_name].include? req.branch
       return send(resp, 404, "Invalid token") unless /\/#{@config[req.repository_name]['token']}$/ =~ @http_path_info
 
       deploy resp, req
     rescue Exception => e
-      @log.error "Error while processing HTTP request: #{e.inspect} \nREQUEST: #{@http_request_method} #{@http_path_info}?#{@http_query_string}\n#{@http_post_content} \nBacktrace: #{e.backtrace}"
-      send resp, 500, "Error processing http request: #{e.inspect}"
+      send resp, 500, "Error while processing HTTP request: #{e.inspect} \nREQUEST: #{@http_request_method} #{@http_path_info}?#{@http_query_string}\n#{@http_post_content} \nBacktrace: #{e.backtrace}"
     end
   end
 
@@ -40,13 +39,16 @@ class HttpHandler < EventMachine::Connection
       d.deploy
       send resp, 200, "Deploy ok"
     rescue Exception => e
-      @log.error "Error while deploying branch #{req.branch}: #{e.inspect} \nBacktrace: #{e.backtrace}"
-      send resp, 500, "Error while deploying: #{e.inspect}"
+      send resp, 500, "Error while deploying branch #{req.branch}: #{e.inspect} \nBacktrace: #{e.backtrace}"
     end
   end
 
   def send resp, status, message
-    @log.info "#{status}: #{message}"
+    if status == 500
+      @log.error "#{status}: #{message}"
+    else
+      @log.info "#{status}: #{message}"
+    end
     resp.status = status
     resp.content = message
     resp.send_response
