@@ -4,10 +4,10 @@ require File.dirname(__FILE__) + '/git_handler'
 require File.dirname(__FILE__) + '/command_runner'
 
 class Deployer
-  def initialize(logger, request, config)
+  def initialize(logger, config, branch)
     @log = logger
-    @req = request
     @config = config
+    @branch = branch
     @cmd = CommandRunner.new(@log)
     @trigger_class = nil
   end
@@ -32,28 +32,28 @@ class Deployer
   end
 
   def deploy
-    git = GitHandler.new @config[@req.repository_name]
-    git.deploy_branch(@req.branch) do |dir, branch|
-      @cmd.cd(dir){|c| c.run! "bundle install"}
+    git = GitHandler.new @config
+    git.deploy_branch(@branch) do |dir, branch|
+      @cmd.cd(dir).run!("bundle install")
       @trigger_class = look_for_triggers(dir)
       before_trigger(dir) if has_before_trigger?
     end
-    @log.warn "Branch #{@req.branch} deployed"
-    dir = "#{git.branches_path}/#{@req.branch}"
+    @log.warn "Branch #{@branch} deployed"
+    dir = "#{git.branches_path}/#{@branch}"
     after_trigger(dir) if has_after_trigger?
   end
 
   def before_trigger(dir)
     @log.debug "Executing before_trigger"
     Dir.chdir(dir) do
-      raise "before_deploy returned false." unless @trigger_class.before_deploy({:path => dir, :branch => @req.branch})
+      raise "before_deploy returned false." unless @trigger_class.before_deploy({:path => dir, :branch => @branch, :shell => @cmd})
     end
   end
 
   def after_trigger(dir)
     @log.debug "Executing after_trigger"
     Dir.chdir(dir) do
-      @trigger_class.after_deploy({:path => dir, :branch => @req.branch})
+      @trigger_class.after_deploy({:path => dir, :branch => @branch, :shell => @cmd})
       @log.info "After deploy script executed"
     end
   end

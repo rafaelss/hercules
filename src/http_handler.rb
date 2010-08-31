@@ -35,7 +35,7 @@ class HttpHandler < EventMachine::Connection
   end
 
   def deploy resp, req
-    d = Deployer.new(@log, req, @config)
+    d = Deployer.new(@log, @config[req.repository_name], req.branch)
     begin
       d.deploy
       send resp, 200, "Deploy ok"

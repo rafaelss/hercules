@@ -11,9 +11,7 @@ class CommandRunner
 
   def cd(dir)
     @dir = dir
-    yield self
-  ensure
-    @dir = nil
+    self
   end
 
   def run(command)

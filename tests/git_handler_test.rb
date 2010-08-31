@@ -38,7 +38,7 @@ class GitHandlerTest < Test::Unit::TestCase
   def test_create_branches_dir
     g = GitHandler.new(@config['test_project'])
     g.create_branches_dir
-    assert File.exists? @config['test_project']['target_directory'] + '/branches'
+    assert (File.exists?(@config['test_project']['target_directory'] + '/branches'))
   end
 
   def test_branches_dir
