@@ -54,7 +54,7 @@ class Deployer
     @log.debug "Executing after_trigger"
     Dir.chdir(dir) do
       @trigger_class.after_deploy({:path => dir, :branch => @branch, :shell => @cmd})
-      @log.info "After deploy script executed"
     end
+    @log.info "After deploy script executed"
   end
 end

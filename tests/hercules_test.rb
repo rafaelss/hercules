@@ -1,8 +1,10 @@
 # coding: utf-8
 require 'tests/startup'
+require 'tests/git_setup'
 
 class HerculesTest < Test::Unit::TestCase
   include Startup
+  include GitSetup
 
   def setup
     prepare_startup
@@ -63,6 +65,20 @@ class HerculesTest < Test::Unit::TestCase
       FileUtils.mv "tests/fixtures/config.old.yml", "tests/fixtures/config.yml"
       assert_match /Reloading config/, log_content
       assert_match /Error reading/, log_content
+    end
+  end
+
+  def test_checkouts_on_startup
+    git_setup
+    FileUtils.mv "tests/fixtures/config.yml", "tests/fixtures/config.old.yml"
+    FileUtils.mv "tests/fixtures/startup_checkout_config.yml", "tests/fixtures/config.yml"
+    start_hercules do |pid,log|
+      FileUtils.mv "tests/fixtures/config.yml", "tests/fixtures/startup_checkout_config.yml"
+      FileUtils.mv "tests/fixtures/config.old.yml", "tests/fixtures/config.yml"
+      sleep 3
+      log_content = log.read
+      assert_match /Branch master deployed/, log_content
+      assert_is_checkout @config['test_project']['target_directory'] + '/branches/master'
     end
   end
 end

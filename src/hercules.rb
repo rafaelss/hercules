@@ -114,10 +114,21 @@ class Hercules
     opts.parse!(@arguments)
   end
 
+  def startup_checkouts
+    @config.each do |project,config|
+      config.each do |branch,options|
+        if options.is_a?(Hash) and options["checkout_on_startup"]
+          Deployer.new(@log, config, branch).deploy
+        end
+      end
+    end
+  end
+
   def process_command
     EventMachine::run do
       Signal.trap("TERM"){ exit_gracefully }
       Signal.trap("HUP"){ reload_config }
+      startup_checkouts
       EventMachine.epoll
       host = @config['host'] || "0.0.0.0"
       port = @config['port'] || 8080
