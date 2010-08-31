@@ -5,8 +5,7 @@ require 'eventmachine'
 require 'evma_httpserver'
 require 'json'
 require File.dirname(__FILE__) + '/request_handler'
-require File.dirname(__FILE__) + '/git_handler'
-require File.dirname(__FILE__) + '/command_runner'
+require File.dirname(__FILE__) + '/deployer'
 
 class HttpHandler < EventMachine::Connection
   include EventMachine::HttpServer
@@ -36,40 +35,13 @@ class HttpHandler < EventMachine::Connection
   end
 
   def deploy resp, req
+    d = Deployer.new(@log, req, @config)
     begin
-      git = GitHandler.new @config[req.repository_name]
-      git.deploy_branch(req.branch) do |dir, branch|
-        CommandRunner.new(@log).cd(dir){|c| c.run! "bundle install"}
-        if File.exists? "#{dir}/lib/deployer.rb"
-          require "#{dir}/lib/deployer.rb"
-          Dir.chdir(dir) do
-            begin
-              raise "before_deploy returned false." unless HerculesTriggers::Deployer.before_deploy({:path => dir, :branch => branch})
-            rescue NameError => e
-              # We have to allow the use of a lib/deployer.rb unrelated to Hercules
-              raise "Error during before_deploy: #{e.message}" if e.message != 'uninitialized constant HttpHandler::HerculesTriggers'
-              @log.warn "File lib/deployer.rb without HerculesTriggers::Deployer: #{e.inspect}"
-            end
-          end
-        end
-      end
-      @log.warn "Branch #{req.branch} deployed"
-      dir = "#{git.branches_path}/#{req.branch}"
-      if File.exists? "#{dir}/lib/deployer.rb"
-        Dir.chdir(dir) do
-          begin
-            HerculesTriggers::Deployer.after_deploy({:path => dir, :branch => req.branch})
-          rescue NameError => e
-            raise "Error during before_deploy: #{e.message}" if e.message != 'uninitialized constant HttpHandler::HerculesTriggers'
-            @log.warn "File lib/deployer.rb without HerculesTriggers::Deployer"
-          end
-        end
-      end
-      @log.info "After deploy script executed"
+      d.deploy
       send resp, 200, "Deploy ok"
     rescue Exception => e
       @log.error "Error while deploying branch #{req.branch}: #{e.inspect} \nBacktrace: #{e.backtrace}"
-      send resp, 500, "Error during deploy: #{e.inspect}"
+      send resp, 500, "Error while deploying: #{e.inspect}"
     end
   end
 
