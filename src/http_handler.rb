@@ -29,7 +29,8 @@ class HttpHandler < EventMachine::Connection
 
       deploy resp, req
     rescue Exception => e
-      send resp, 500, "Error while processing HTTP request: #{e.inspect} \nREQUEST: #{@http_request_method} #{@http_path_info}?#{@http_query_string}\n#{@http_post_content} \nBacktrace: #{e.backtrace}"
+      send resp, 500, "Error while processing HTTP request: #{e.inspect} \nREQUEST: #{@http_request_method} #{@http_path_info}?#{@http_query_string}\n#{@http_post_content}"
+      @log.error "Backtrace: #{e.backtrace}"
     end
   end
 
@@ -39,7 +40,8 @@ class HttpHandler < EventMachine::Connection
       d.deploy
       send resp, 200, "Deploy ok"
     rescue Exception => e
-      send resp, 500, "Error while deploying branch #{req.branch}: #{e.inspect} \nBacktrace: #{e.backtrace}"
+      send resp, 500, "Error while deploying branch #{req.branch}: #{e.inspect}"
+      @log.error "Backtrace: #{e.backtrace}"
     end
   end
 
