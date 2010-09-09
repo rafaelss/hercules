@@ -18,9 +18,9 @@ class HttpHandler < EventMachine::Connection
   def process_http_request
     begin
       resp = EventMachine::DelegatedHttpResponse.new( self )
+      return send(resp, 404, "POST content is null") if @http_post_content.nil?
       post = URI.unescape @http_post_content
       @log.debug "Received POST: #{post}"
-      return send(resp, 404, "POST content is null") if post.nil?
 
       req = RequestHandler.new post.gsub(/^payload=/, "")
       return send(resp, 404, "Repository #{req.repository_name} not found in config") unless @config.include? req.repository_name

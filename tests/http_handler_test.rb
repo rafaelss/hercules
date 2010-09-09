@@ -61,6 +61,13 @@ class HttpHandlerTest < Test::Unit::TestCase
     end
   end
 
+  def get token
+    start_hercules do |pid,log|
+      res = Net::HTTP.get(URI.parse("http://127.0.0.1:8080/#{token}"))
+      yield res, log
+    end
+  end
+
   def test_double_post
     test_simple_post
     test_simple_post
@@ -185,5 +192,11 @@ class HttpHandlerTest < Test::Unit::TestCase
     end
     assert File.exists?(@config['test_project']['target_directory'] + '/branches/master')
     assert File.exists?(@config['test_project']['target_directory'] + '/branches/master/branch_name_master')
+  end
+
+  def test_get
+    get "abc" do |res,log|
+      assert_no_match /500: Error/, log.read
+    end
   end
 end
