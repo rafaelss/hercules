@@ -68,6 +68,24 @@ class HerculesTest < Test::Unit::TestCase
     end
   end
 
+  def test_checkouts_on_startup_with_errors
+    git_setup
+    FileUtils.mv "tests/fixtures/config.yml", "tests/fixtures/config.old.yml"
+    FileUtils.mv "tests/fixtures/startup_checkout_error_config.yml", "tests/fixtures/config.yml"
+    begin
+      log_content = ""
+      start_hercules do |pid,log|
+        sleep 10
+        log_content = log.read
+        assert_match /Branch master deployed/, log_content
+        assert File.exist?(@pidfile)
+      end
+    ensure
+      FileUtils.mv "tests/fixtures/config.yml", "tests/fixtures/startup_checkout_error_config.yml"
+      FileUtils.mv "tests/fixtures/config.old.yml", "tests/fixtures/config.yml"
+    end
+  end
+
   def test_checkouts_on_startup
     git_setup
     FileUtils.mv "tests/fixtures/config.yml", "tests/fixtures/config.old.yml"

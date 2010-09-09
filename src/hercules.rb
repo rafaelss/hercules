@@ -115,13 +115,17 @@ class Hercules
   end
 
   def startup_checkouts
-    @config.each do |project,config|
-      config.each do |branch,options|
-        if options.is_a?(Hash) and options["checkout_on_startup"]
-          Deployer.new(@log, config, branch).deploy
+      @config.each do |project,config|
+        config.each do |branch,options|
+          if options.is_a?(Hash) and options["checkout_on_startup"]
+            begin
+              Deployer.new(@log, config, branch).deploy
+            rescue Exception => e
+              @log.error "Error in startup checkout of branch #{branch}: #{e.message}\nBacktrace:#{e.backtrace}"
+            end
+          end
         end
       end
-    end
   end
 
   def process_command
