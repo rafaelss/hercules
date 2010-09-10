@@ -1,5 +1,5 @@
-module HerculesTriggers
-  class Deployer
+module Hercules
+  class Triggers
     def self.before_deploy(options)
       puts "test with #{undefined_variable}"
     end

@@ -32,7 +32,7 @@ module GitSetup
     path = File.expand_path( File.dirname(__FILE__) )
     change_repository do
       FileUtils.mkdir_p("./lib")
-      FileUtils.cp("#{path}/fixtures/#{deployer_name}.rb", "./lib/deployer.rb")
+      FileUtils.cp("#{path}/fixtures/#{deployer_name}.rb", "./lib/hercules_triggers.rb")
     end
   end
 

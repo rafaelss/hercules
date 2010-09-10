@@ -1,5 +1,5 @@
-module HerculesTriggers
-  class Deployer
+module Hercules
+  class Triggers
     def self.before_deploy(options)
       raise "test exception"
     end

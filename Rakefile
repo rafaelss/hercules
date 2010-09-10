@@ -13,6 +13,6 @@ task :test do
 end
 
 task :doc do  
-  sh "rdoc src/hercules.rb"
+  sh "cd src && rdoc -o ../doc"
 end
 

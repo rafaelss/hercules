@@ -147,7 +147,7 @@ class HttpHandlerTest < Test::Unit::TestCase
       log_content = log.read()
       assert_match /Received POST/, log_content
       assert_no_match /Error while deploying/, log_content
-      assert_match /File lib\/deployer\.rb without HerculesTriggers::Deployer/, log_content
+      assert_match /File lib\/deployer\.rb without Hercules::Triggers/, log_content
     end
     assert File.exists?(@config['test_project']['target_directory'] + '/branches/master')
   end
