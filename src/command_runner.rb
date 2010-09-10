@@ -12,6 +12,10 @@ class CommandRunner
     @output = ""
   end
 
+  def store_output path
+    File.open(path, 'a+'){|f| f.write @output }
+  end
+
   def cd(dir)
     @dir = dir
     self

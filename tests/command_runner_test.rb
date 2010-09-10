@@ -19,5 +19,16 @@ class CommandRunnerTest < Test::Unit::TestCase
     @cmd.run("echo test3")
     assert_equal "test1\ntest2\ntest3\n", @cmd.output
   end
+
+  def test_command_log_store
+    @cmd.run("echo test1")
+    @cmd.run("echo test2")
+    @cmd.run("echo test3")
+    file = "/tmp/output.#{Time.now.strftime "%Y%m%d%H%M%S"}.log"
+    @cmd.store_output file
+    File.open(file, 'r') do |f|
+      assert_equal "test1\ntest2\ntest3\n", f.read
+    end
+  end
 end
 
