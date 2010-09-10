@@ -1,12 +1,15 @@
 # Yes, this class was kindly provided by Integrity.
 # A very nice CI solution built with ruby: http://github.com/integrity/integrity
 class CommandRunner
+  attr_reader :output
+
   class Error < StandardError; end
 
   Result = Struct.new(:success, :output)
 
   def initialize(logger)
     @logger = logger
+    @output = ""
   end
 
   def cd(dir)
@@ -22,6 +25,7 @@ class CommandRunner
     output = ""
     IO.popen(cmd, "r") { |io| output = io.read }
 
+    @output += output
     Result.new($?.success?, output.chomp)
   end
 
