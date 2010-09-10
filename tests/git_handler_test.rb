@@ -9,6 +9,12 @@ class GitHandlerTest < Test::Unit::TestCase
     git_setup
   end
 
+  def test_get_last_commit
+    g = Hercules::GitHandler.new(@config['test_project'])
+    g.export_branch('master')
+    assert_equal @head_sha, g.last_commit
+  end
+
   def test_export_branch
     g = Hercules::GitHandler.new(@config['test_project'])
     g.export_branch('master')

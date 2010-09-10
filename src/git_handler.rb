@@ -4,6 +4,7 @@ require 'git'
 module Hercules
   # Class that handles the git operations.
   class GitHandler
+    attr_reader :last_commit
     # We pass an options hash that should contain: 
     #   {
     #   'target_directory' => '/home/hercules/hercules.com', 
@@ -12,6 +13,7 @@ module Hercules
     #   }
     def initialize(options)
       @options = options
+      @last_commit = nil
     end
 
     # Will export the branch to @options['target_directory']/checkouts/
@@ -27,7 +29,8 @@ module Hercules
         FileUtils.rm_rf repo.dir.to_s unless repo.nil?
         raise "Error while cloning #{@options['repository']}: #{e}"
       end
-      commit_dir = "#{@options['target_directory']}/checkouts/#{branch}/#{repo.gcommit('HEAD').sha}"
+      @last_commit = repo.gcommit('HEAD').sha
+      commit_dir = "#{@options['target_directory']}/checkouts/#{branch}/#{@last_commit}"
       Dir.chdir(repo.dir.to_s) { FileUtils.rm_r '.git' }
       FileUtils.mv repo.dir.to_s, commit_dir
       commit_dir
