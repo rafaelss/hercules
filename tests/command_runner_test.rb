@@ -6,7 +6,7 @@ class CommandRunnerTest < Test::Unit::TestCase
   def setup
     @log = Logger.new(STDERR)
     @log.level = Logger::ERROR
-    @cmd = CommandRunner.new @log
+    @cmd = Hercules::CommandRunner.new @log
   end
 
   def test_command_output
