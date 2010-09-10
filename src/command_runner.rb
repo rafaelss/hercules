@@ -1,11 +1,13 @@
 module Hercules
+  # Class to run the shell commands and store their output.
   # Yes, this class was kindly provided by Integrity.
   # A very nice CI solution built with ruby: http://github.com/integrity/integrity
   # I've made some modifications to store all the commands ran in an output log.
   class CommandRunner
     attr_reader :output
 
-    class Error < StandardError; end
+    class Error < StandardError # :nodoc:
+    end
 
     Result = Struct.new(:success, :output)
 

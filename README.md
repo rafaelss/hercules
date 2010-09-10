@@ -23,18 +23,18 @@
   Take a look at tests/fixtures/config.yml for a sample configuration file and at tests/fixtures/deployer_true.rb for a sample deployer script.
 
 ## The deploy hooks
-  The deployer scripts should be inside lib/deployer.rb
+  The deployer scripts should be inside lib/hercules_triggers.rb
   Hercules implements two deploy hooks so far: before_deploy and after_deploy.
-  They should be coded inside a module called HerculesTriggers in a class Deployer as class methods, moreover they receive an options parameter which contains the path key with the complete deployment path.
-  If you do not have a HerculesTriggers module you can use the file lib/deployer.rb and it will be ignored by the deployer.
+  They should be coded inside a module called Hercules in a class Triggers as class methods, moreover they receive an options parameter which contains: the path key with the complete deployment path, the branch key with the name of the branch to be deployed, and the shell key with  a CommandRunner object to execute shell commands during deploy.
+  If you do not have a Hercules module you can use the file lib/hercules_tiggers.rb and it will be ignored by the deployer.
 
-      module HerculesTriggers
-        class Deployer
+      module Hercules
+        class Triggers
           def self.before_deploy(options)
-            `cp config/database.sample.yml config/database.yml`
+            options[:shell].run "cp config/database.sample.yml config/database.yml"
           end
           def self.after_deploy(options)
-            `kill -HUP \`cat /var/run/unicorn/development.pid\``
+            options[:shell].run "kill -HUP \`cat /var/run/unicorn/development.pid\`"
           end
         end
       end
@@ -42,15 +42,12 @@
 ### Canceling the deploy
   If the before_deploy hook returns anything that evaluate as false the deploy will be cancelled.
   The return value of after_deploy is ignored.  
-  Also, you can create a Deployer class without all the hooks, only the implemented ones will be called.
+  Also, you can create a Triggers class without all the hooks, only the implemented ones will be called.
 
-      module HerculesTriggers
-        class Deployer
-          def self.before_deploy(options)
-            true
-          end
+      module Hercules
+        class Triggers
           def self.after_deploy(options)
-            `kill -HUP \`cat /var/run/unicorn/development.pid\``
+            options[:shell].run "kill -HUP \`cat /var/run/unicorn/development.pid\`"
           end
         end
       end

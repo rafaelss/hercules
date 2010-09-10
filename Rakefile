@@ -13,6 +13,7 @@ task :test do
 end
 
 task :doc do  
+  sh "rm -rf doc"
   sh "cd src && rdoc -o ../doc"
 end
 
