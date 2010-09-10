@@ -55,9 +55,9 @@ module Hercules
       dir = "#{git.branches_path}/#{@branch}"
       after_trigger(dir) if has_after_trigger?
       # Now we must store the deploy output
-      #output_dir = "#{@config['target_directory']}/output/#{@branch}/"
-      #FileUtils.mkdir_p output_dir
-      #@cmd.store_output "#{output_dir}/#{git.last_commit}"
+      output_dir = "#{@config['target_directory']}/output/#{@branch}/"
+      FileUtils.mkdir_p output_dir
+      @cmd.store_output "#{output_dir}/#{git.last_commit}.log"
     end
 
     # This method will execute the before trigger
