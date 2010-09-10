@@ -47,7 +47,7 @@
       module Hercules
         class Triggers
           def self.after_deploy(options)
-            options[:shell].run "kill -HUP \`cat /var/run/unicorn/development.pid\`"
+            options[:shell].run "kill -HUP `cat /var/run/unicorn/development.pid`"
           end
         end
       end
