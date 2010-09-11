@@ -19,29 +19,13 @@ module Hercules
     def process_http_request
       begin
         resp = EventMachine::DelegatedHttpResponse.new( self )
-        process_post resp if @http_request_method == 'POST'
-        process_get  resp if @http_request_method == 'GET'
+        req = RequestHandler.new @config, @log, @http_request_method, @http_path_info, @http_query_string, @http_post_content
+        return send(resp, req.status, req.message) unless req.status == 200
+        deploy resp, req
       rescue Exception => e
         send resp, 500, "Error while processing HTTP request: #{e.inspect} \nREQUEST: #{@http_request_method} #{@http_path_info}?#{@http_query_string}\n#{@http_post_content}"
         @log.error "Backtrace: #{e.backtrace}"
       end
-    end
-
-    def process_get resp
-      return send(resp, 404, "GET not supported")
-    end
-
-    def process_post resp
-      return send(resp, 404, "POST content is null") if @http_post_content.nil? 
-      post = URI.unescape @http_post_content
-      @log.debug "Received POST: #{post}"
-
-      req = RequestHandler.new post.gsub(/^payload=/, "")
-      return send(resp, 404, "Repository #{req.repository_name} not found in config") unless @config.include? req.repository_name
-      return send(resp, 404, "Branch #{req.branch} not found in config") unless @config[req.repository_name].include? req.branch
-      return send(resp, 404, "Invalid token") unless /\/#{@config[req.repository_name]['token']}$/ =~ @http_path_info
-
-        deploy resp, req
     end
 
     def deploy resp, req

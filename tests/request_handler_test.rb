@@ -4,8 +4,7 @@ require 'src/request_handler'
 class RequestHandlerTest < Test::Unit::TestCase
   def setup
     @config = YAML.load_file(File.dirname(__FILE__) + '/fixtures/config.yml')
-    @json_request = %<
-{
+    @json_request = %<payload={
   "before": "5aef35982fb2d34e9d9d4502f6ede1072793222d",
   "repository": {
     "url": "http://github.com/defunkt/github",
@@ -45,7 +44,7 @@ class RequestHandlerTest < Test::Unit::TestCase
   "after": "de8251ff97ee194a289832576287d6f8ad74e3d0",
   "ref": "refs/heads/master"
 }>
-    @handler = Hercules::RequestHandler.new @json_request
+    @handler = Hercules::RequestHandler.new @config, Logger.new("/dev/null"), "POST", "/github", "", @json_request
   end
 
   def test_read_repository_attributes
