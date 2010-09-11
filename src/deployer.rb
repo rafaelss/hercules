@@ -24,7 +24,7 @@ module Hercules
     # Check if the project has an after trigger
     def has_after_trigger?;  (!@trigger_class.nil? and @trigger_class.methods.include?("after_deploy"))  ;end
 
-    # Look for triggers in <dir>/lib/deployer.rb
+    # Look for triggers in <dir>/lib/hercules_triggers.rb
     # The triggers should be inside a Hercules module in the Triggers class.
     # * dir is the root dir where we will look for the triggers.
     def look_for_triggers(dir)
