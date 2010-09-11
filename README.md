@@ -34,7 +34,7 @@
             options[:shell].run "cp config/database.sample.yml config/database.yml"
           end
           def self.after_deploy(options)
-            options[:shell].run "kill -HUP \`cat /var/run/unicorn/development.pid\`"
+            options[:shell].run "kill -HUP `cat /var/run/unicorn/development.pid`"
           end
         end
       end
@@ -46,8 +46,9 @@
 
       module Hercules
         class Triggers
-          def self.after_deploy(options)
-            options[:shell].run "kill -HUP `cat /var/run/unicorn/development.pid`"
+          def self.before_deploy(options)
+            # This will cancel the deploy
+            false
           end
         end
       end
