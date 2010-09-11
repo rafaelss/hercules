@@ -34,7 +34,7 @@ module Hercules
           @log.info "Looking for trigger in #{dir}/lib/hercules_triggers.rb"
           return ::Hercules::Triggers
         rescue NameError => e
-          # We have to allow the use of a lib/deployer.rb unrelated to Hercules
+          # We have to allow the use of a lib/hercules_triggers.rb unrelated to Hercules
           if e.message =~ /uninitialized constant .*Hercules.*/
             @log.warn "File lib/deployer.rb without Hercules::Triggers: #{e.inspect}"
             return nil
