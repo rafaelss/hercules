@@ -68,11 +68,6 @@ class HttpHandlerTest < Test::Unit::TestCase
     end
   end
 
-  def test_double_post
-    test_simple_post
-    test_simple_post
-  end
-
   def test_simple_post
     post "abc" do |res, log|
       log_content = log.read()
@@ -82,116 +77,6 @@ class HttpHandlerTest < Test::Unit::TestCase
       assert_no_match /Repository .* not found/, res.body
       assert_is_checkout @config['test_project']['target_directory'] + '/branches/master'
     end
-  end
-
-  def test_invalid_token
-    post "invalid_token" do |res, log|
-      log_content = log.read()
-      assert_match /Received POST/, log_content
-      assert_match /Invalid token/, log_content
-      assert_match /Invalid token/, res.body
-    end
-    assert !File.exists?(@config['test_project']['target_directory'] + '/branches/master')
-  end
-
-  def test_repository_not_found
-    @json_request = @json_request.gsub(/test_project/, "project_that_does_not_exist")
-    post "abc" do |res, log|
-      assert_match /Repository .* not found/, log.read()
-      assert_match /Repository .* not found/, res.body
-    end
-  end
-
-  def test_branch_not_found
-    @json_request = @json_request.gsub(/master/, "branch_that_does_not_exist")
-    post "abc" do |res, log|
-      assert_match /Branch .* not found/, log.read()
-      assert_match /Branch .* not found/, res.body
-    end
-  end
-
-  def test_could_not_install_gem
-    generate_bogus_gemfile
-    post "abc" do |res, log|
-      log_content = log.read()
-      assert_match /Received POST/, log_content
-      assert_match /Failed to run/, log_content
-    end
-    assert !File.exists?(@config['test_project']['target_directory'] + '/branches/master')
-  end
-
-  def test_deployer_false
-    generate_deployer "deployer_false"
-    post "abc" do |res, log|
-      log_content = log.read()
-      assert_match /Received POST/, log_content
-      assert_match /Error while deploying/, log_content
-    end
-    assert !File.exists?(@config['test_project']['target_directory'] + '/branches/master')
-  end
-
-  def test_deployer_true
-    generate_deployer "deployer_true"
-    post "abc" do |res, log|
-      log_content = log.read()
-      assert_match /Received POST/, log_content
-      assert_no_match /Error while deploying/, log_content
-    end
-    assert File.exists?(@config['test_project']['target_directory'] + '/branches/master')
-    assert File.exists?(@config['test_project']['target_directory'] + '/branches/master/after_deploy')
-  end
-
-  def test_bogus_deployer
-    generate_deployer "bogus_deployer"
-    post "abc" do |res, log|
-      log_content = log.read()
-      assert_match /Received POST/, log_content
-      assert_no_match /Error while deploying/, log_content
-      assert_match /File lib\/deployer\.rb without Hercules::Triggers/, log_content
-    end
-    assert File.exists?(@config['test_project']['target_directory'] + '/branches/master')
-  end
-
-  def test_deployer_path
-    generate_deployer "deployer_path"
-    post "abc" do |res, log|
-      log_content = log.read()
-      assert_match /Received POST/, log_content
-      assert_no_match /Error while deploying/, log_content
-    end
-    assert File.exists?(@config['test_project']['target_directory'] + '/branches/master')
-    assert File.exists?(@config['test_project']['target_directory'] + '/branches/master/after_deploy')
-  end
-
-  def test_deployer_exception
-    generate_deployer "deployer_exception"
-    post "abc" do |res, log|
-      log_content = log.read()
-      assert_match /Received POST/, log_content
-      assert_match /Error while deploying/, log_content
-    end
-    assert !File.exists?(@config['test_project']['target_directory'] + '/branches/master')
-  end
-
-  def test_deployer_undefined_variable
-    generate_deployer "deployer_undefined_variable"
-    post "abc" do |res, log|
-      log_content = log.read()
-      assert_match /Received POST/, log_content
-      assert_match /Error while deploying/, log_content
-    end
-    assert !File.exists?(@config['test_project']['target_directory'] + '/branches/master')
-  end
-
-  def test_deployer_branch
-    generate_deployer "deployer_branch"
-    post "abc" do |res, log|
-      log_content = log.read()
-      assert_match /Received POST/, log_content
-      assert_no_match /Error while deploying/, log_content
-    end
-    assert File.exists?(@config['test_project']['target_directory'] + '/branches/master')
-    assert File.exists?(@config['test_project']['target_directory'] + '/branches/master/branch_name_master')
   end
 
   def test_get
