@@ -65,6 +65,7 @@ module Hercules
     # Call the Deployer class to do the deploy magic.
     # To implement a diferent SCM we will need to rewrite the Deployer and this method.
     def deploy
+      require File.dirname(__FILE__) + '/deployer'
       d = Deployer.new(@log, @config[repository_name], branch)
       begin
         d.deploy
