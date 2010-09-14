@@ -19,22 +19,10 @@ module Hercules
     def process_http_request
       begin
         resp = EventMachine::DelegatedHttpResponse.new( self )
-        req = RequestHandler.new @config, @log, @http_request_method, @http_path_info, @http_query_string, @http_post_content
-        return send(resp, req.status, req.message) unless req.status == 200
-        deploy resp, req
+        req = RequestHandler.new({:config => @config, :log => @log, :method => @http_request_method, :path => @http_path_info, :query => @http_query_string, :body => @http_post_content})
+        return send(resp, req.status, req.message)
       rescue Exception => e
-        send resp, 500, "Error while processing HTTP request: #{e.inspect} \nREQUEST: #{@http_request_method} #{@http_path_info}?#{@http_query_string}\n#{@http_post_content}"
-        @log.error "Backtrace: #{e.backtrace}"
-      end
-    end
-
-    def deploy resp, req
-      d = Deployer.new(@log, @config[req.repository_name], req.branch)
-      begin
-        d.deploy
-        send resp, 200, "Deploy ok"
-      rescue Exception => e
-        send resp, 500, "Error while deploying branch #{req.branch}: #{e.inspect}"
+        send(resp, 500, "Error while processing HTTP request: #{e.inspect} \nREQUEST: #{@http_request_method} #{@http_path_info}?#{@http_query_string}\n#{@http_post_content}")
         @log.error "Backtrace: #{e.backtrace}"
       end
     end

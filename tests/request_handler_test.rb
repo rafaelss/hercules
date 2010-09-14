@@ -44,7 +44,7 @@ class RequestHandlerTest < Test::Unit::TestCase
   "after": "de8251ff97ee194a289832576287d6f8ad74e3d0",
   "ref": "refs/heads/master"
 }>
-    @handler = Hercules::RequestHandler.new @config, Logger.new("/dev/null"), "POST", "/github", "", @json_request
+    @handler = Hercules::RequestHandler.new({:config => @config, :log => Logger.new("/dev/null"), :method => "POST", :path => "/github", :query => "", :body => @json_request})
   end
 
   def test_read_repository_attributes
