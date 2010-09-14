@@ -19,6 +19,44 @@ module Hercules
       @trigger_class = nil
     end
 
+
+    # This method will do the deploy: git clone, run bundle install and call the triggers callbacks.
+    def deploy
+      git = GitHandler.new @config
+      git.deploy_branch(@branch) do |dir, branch|
+        @cmd.cd(dir).run!("bundle install")
+        @trigger_class = look_for_triggers(dir)
+        before_trigger(dir) if has_before_trigger?
+      end
+      @log.warn "Branch #{@branch} deployed"
+      dir = "#{git.branches_path}/#{@branch}"
+      after_trigger(dir) if has_after_trigger?
+      # Now we must store the deploy output
+      output_dir = "#{@config['target_directory']}/output/#{@branch}/"
+      FileUtils.mkdir_p output_dir
+      @cmd.store_output "#{output_dir}/#{git.last_commit}.log"
+    end
+
+    private
+    # This method will execute the before trigger
+    # * dir is the working directory for trigger execution.
+    def before_trigger(dir)
+      @log.debug "Executing before_trigger"
+      Dir.chdir(dir) do
+        raise "before_deploy returned false." unless @trigger_class.before_deploy({:path => dir, :branch => @branch, :shell => @cmd})
+      end
+    end
+
+    # This method will execute the after trigger
+    # * dir is the working directory for trigger execution.
+    def after_trigger(dir)
+      @log.debug "Executing after_trigger"
+      Dir.chdir(dir) do
+        @trigger_class.after_deploy({:path => dir, :branch => @branch, :shell => @cmd})
+      end
+      @log.info "After deploy script executed"
+    end
+
     # Check if the project has a before trigger
     def has_before_trigger?; (!@trigger_class.nil? and @trigger_class.methods.include?("before_deploy"))  ;end
     # Check if the project has an after trigger
@@ -41,42 +79,6 @@ module Hercules
           end
         end
       end
-    end
-
-    # This method will do the deploy: git clone, run bundle install and call the triggers callbacks.
-    def deploy
-      git = GitHandler.new @config
-      git.deploy_branch(@branch) do |dir, branch|
-        @cmd.cd(dir).run!("bundle install")
-        @trigger_class = look_for_triggers(dir)
-        before_trigger(dir) if has_before_trigger?
-      end
-      @log.warn "Branch #{@branch} deployed"
-      dir = "#{git.branches_path}/#{@branch}"
-      after_trigger(dir) if has_after_trigger?
-      # Now we must store the deploy output
-      output_dir = "#{@config['target_directory']}/output/#{@branch}/"
-      FileUtils.mkdir_p output_dir
-      @cmd.store_output "#{output_dir}/#{git.last_commit}.log"
-    end
-
-    # This method will execute the before trigger
-    # * dir is the working directory for trigger execution.
-    def before_trigger(dir)
-      @log.debug "Executing before_trigger"
-      Dir.chdir(dir) do
-        raise "before_deploy returned false." unless @trigger_class.before_deploy({:path => dir, :branch => @branch, :shell => @cmd})
-      end
-    end
-
-    # This method will execute the after trigger
-    # * dir is the working directory for trigger execution.
-    def after_trigger(dir)
-      @log.debug "Executing after_trigger"
-      Dir.chdir(dir) do
-        @trigger_class.after_deploy({:path => dir, :branch => @branch, :shell => @cmd})
-      end
-      @log.info "After deploy script executed"
     end
   end
 end

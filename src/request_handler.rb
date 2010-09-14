@@ -30,6 +30,22 @@ module Hercules
       @result[:status]
     end
 
+    # Returns the repository name that fired the request.
+    def repository_name
+      payload['repository']['name']
+    end
+
+    # Returns the url of the repository that fired the request.
+    def repository_url
+      payload['repository']['url']
+    end
+
+    # Returns the branch of the repository that fired the request.
+    def branch
+      payload['ref'].split('/').pop
+    end
+
+    private
     def process_request
       @method == "GET" ? process_get : process_post
     end
@@ -43,9 +59,11 @@ module Hercules
       return {:status => 404, :message => "Repository #{repository_name} not found in config"} unless @config.include? repository_name
       return {:status => 404, :message => "Branch #{branch} not found in config"} unless @config[repository_name].include? branch
       return {:status => 404, :message => "Invalid token"} unless /\/#{@config[repository_name]['token']}$/ =~ @path
-      deploy
+        deploy
     end
 
+    # Call the Deployer class to do the deploy magic.
+    # To implement a diferent SCM we will need to rewrite the Deployer and this method.
     def deploy
       d = Deployer.new(@log, @config[repository_name], branch)
       begin
@@ -70,19 +88,5 @@ module Hercules
       @payload ||= parse_body
     end
 
-    # Returns the repository name that fired the request.
-    def repository_name
-      payload['repository']['name']
-    end
-
-    # Returns the url of the repository that fired the request.
-    def repository_url
-      payload['repository']['url']
-    end
-
-    # Returns the branch of the repository that fired the request.
-    def branch
-      payload['ref'].split('/').pop
-    end
   end
 end
