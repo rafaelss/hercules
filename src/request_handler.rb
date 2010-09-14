@@ -59,7 +59,7 @@ module Hercules
       return {:status => 404, :message => "Repository #{repository_name} not found in config"} unless @config.include? repository_name
       return {:status => 404, :message => "Branch #{branch} not found in config"} unless @config[repository_name].include? branch
       return {:status => 404, :message => "Invalid token"} unless /\/#{@config[repository_name]['token']}$/ =~ @path
-        deploy
+      deploy
     end
 
     # Call the Deployer class to do the deploy magic.
