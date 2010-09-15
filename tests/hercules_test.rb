@@ -100,6 +100,16 @@ class HerculesTest < Test::Unit::TestCase
     end
   end
 
+  def test_no_checkouts_on_startups_with_default_config
+    git_setup
+    start_hercules do |pid,log|
+      sleep 10
+      log_content = log.read
+      assert_no_match /Branch master deployed/, log_content
+      assert !File.exist?(@config['test_project']['target_directory'] + '/branches/master')
+    end
+  end
+
   def test_checkouts_on_startup_with_hidden_tmp
     git_setup
     FileUtils.mv "tests/fixtures/config.yml", "tests/fixtures/config.old.yml"

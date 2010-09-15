@@ -119,10 +119,13 @@ module Hercules
     def startup_checkouts
       @config.branches.each do |project,branches|
         branches.each do |branch|
-          begin
-            Deployer.new(@log, @config[project], branch).deploy
-          rescue Exception => e
-            @log.error "Error in startup checkout of branch #{branch}: #{e.message}\nBacktrace:#{e.backtrace}"
+          if @config[project][branch]['checkout_on_startup']
+            @log.info "Starting checkout of #{branch} in project #{project}..."
+            begin
+              Deployer.new(@log, @config[project], branch).deploy
+            rescue Exception => e
+              @log.error "Error in startup checkout of branch #{branch}: #{e.message}\nBacktrace:#{e.backtrace}"
+            end
           end
         end
       end
