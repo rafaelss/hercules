@@ -1,4 +1,3 @@
-* Make methods in the HerculesTriggers::Deployer optional
 * Make the reload configuration work (or maybe read the config file on every request).
 * Make http GET interface that returns JSON with projects and current deployed branches.
 * Put some javascript to create an end user interface from the JSON data.
