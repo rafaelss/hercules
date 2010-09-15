@@ -1,5 +1,6 @@
 # coding: utf-8
 require 'json'
+require File.dirname(__FILE__) + '/deployer'
 
 module Hercules
   # Class that knows how to handle deploy requests.
@@ -58,14 +59,13 @@ module Hercules
       return {:status => 404, :message => "POST content is null"} if @body.nil? 
       return {:status => 404, :message => "Repository #{repository_name} not found in config"} unless @config.include? repository_name
       return {:status => 404, :message => "Branch #{branch} not found in config"} unless @config[repository_name].include? branch
-      return {:status => 404, :message => "Invalid token"} unless /\/#{@config[repository_name]['token']}$/ =~ @path
+      return {:status => 403, :message => "Invalid token"} unless /\/#{@config[repository_name]['token']}$/ =~ @path
       deploy
     end
 
     # Call the Deployer class to do the deploy magic.
     # To implement a diferent SCM we will need to rewrite the Deployer and this method.
     def deploy
-      require File.dirname(__FILE__) + '/deployer'
       d = Deployer.new(@log, @config[repository_name], branch)
       begin
         d.deploy

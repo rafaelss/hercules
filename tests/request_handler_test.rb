@@ -71,24 +71,28 @@ class RequestHandlerTest < Test::Unit::TestCase
   def test_simple_post
     res = post "abc"
     assert_no_match /Repository .* not found/, res.message
+    assert_equal 200, res.status
     assert_is_checkout @config['test_project']['target_directory'] + '/branches/master'
   end
 
   def test_invalid_token
     res = post "invalid_token"
     assert_match /Invalid token/, res.message
+    assert_equal 403, res.status
     assert !File.exists?(@config['test_project']['target_directory'] + '/branches/master')
   end
 
   def test_repository_not_found
     @json_request = @json_request.gsub(/test_project/, "project_that_does_not_exist")
     res = post "abc"
+    assert_equal 404, res.status
     assert_match /Repository .* not found/, res.message
   end
 
   def test_branch_not_found
     @json_request = @json_request.gsub(/master/, "branch_that_does_not_exist")
     res = post "abc"
+    assert_equal 404, res.status
     assert_match /Branch .* not found/, res.message
   end
 
@@ -96,12 +100,14 @@ class RequestHandlerTest < Test::Unit::TestCase
     generate_bogus_gemfile
     res = post "abc"
     assert_match /Failed to run/, res.message
+    assert_equal 500, res.status
     assert !File.exists?(@config['test_project']['target_directory'] + '/branches/master')
   end
 
   def test_deployer_false
     generate_deployer "deployer_false"
     res = post "abc"
+    assert_equal 500, res.status
     assert_match /Error while deploying/, res.message
     assert !File.exists?(@config['test_project']['target_directory'] + '/branches/master')
   end
@@ -109,6 +115,7 @@ class RequestHandlerTest < Test::Unit::TestCase
   def test_deployer_true
     generate_deployer "deployer_true"
     res = post "abc"
+    assert_equal 200, res.status
     assert File.exists?(@config['test_project']['target_directory'] + '/branches/master')
     assert File.exists?(@config['test_project']['target_directory'] + '/branches/master/after_deploy')
   end
@@ -123,6 +130,7 @@ class RequestHandlerTest < Test::Unit::TestCase
   def test_deployer_path
     generate_deployer "deployer_path"
     res = post "abc"
+    assert_equal 200, res.status
     assert File.exists?(@config['test_project']['target_directory'] + '/branches/master')
     assert File.exists?(@config['test_project']['target_directory'] + '/branches/master/after_deploy')
   end
@@ -130,6 +138,7 @@ class RequestHandlerTest < Test::Unit::TestCase
   def test_deployer_exception
     generate_deployer "deployer_exception"
     res = post "abc"
+    assert_equal 500, res.status
     assert_match /Error while deploying/, res.message
     assert !File.exists?(@config['test_project']['target_directory'] + '/branches/master')
   end
@@ -137,6 +146,7 @@ class RequestHandlerTest < Test::Unit::TestCase
   def test_deployer_undefined_variable
     generate_deployer "deployer_undefined_variable"
     res = post "abc"
+    assert_equal 500, res.status
     assert_match /Error while deploying/, res.message
     assert !File.exists?(@config['test_project']['target_directory'] + '/branches/master')
   end
@@ -144,9 +154,9 @@ class RequestHandlerTest < Test::Unit::TestCase
   def test_deployer_branch
     generate_deployer "deployer_branch"
     res = post "abc"
+    assert_equal 200, res.status
     assert File.exists?(@config['test_project']['target_directory'] + '/branches/master')
     assert File.exists?(@config['test_project']['target_directory'] + '/branches/master/branch_name_master')
   end
-
 end
 
