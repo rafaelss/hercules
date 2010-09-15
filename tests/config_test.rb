@@ -3,7 +3,7 @@ require 'src/config.rb'
 class ConfigTest < Test::Unit::TestCase
   def test_basic_methods_with_default_fixture
     config = Hercules::Config.new 'tests/fixtures/config.yml'
-    assert_equal ['test_project'], config.projects
+    assert_equal YAML.load_file('tests/fixtures/config.yml'), config.projects
     assert_equal ['target_directory', 'repository', 'token'], Hercules::Config.project_attributes
     assert_equal ['checkout_on_startup', 'checkouts_to_keep'], Hercules::Config.branch_attributes
     assert_equal ['master', 'test'], config.branches['test_project']
@@ -11,7 +11,10 @@ class ConfigTest < Test::Unit::TestCase
 
   def test_config_attr_reader
     config = Hercules::Config.new 'tests/fixtures/config.yml'
-    assert_equal config.config, YAML.load_file('tests/fixtures/config.yml')
+    yml = YAML.load_file('tests/fixtures/config.yml')
+    config.each do |k,v|
+      assert_equal config[k], yml[k]
+    end
   end
 
   def test_config_validation
@@ -21,6 +24,12 @@ class ConfigTest < Test::Unit::TestCase
     assert_nothing_raised do 
       config = Hercules::Config.new('tests/fixtures/config_empty_branches.yml')
     end
+  end
+
+  def test_config_with_global_attributes
+    config = Hercules::Config.new 'tests/fixtures/config_global.yml'
+    assert_equal "127.0.0.1", config.host
+    assert_equal 8081, config.port
   end
 
   def assert_invalid_config path

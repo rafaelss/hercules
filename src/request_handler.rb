@@ -53,27 +53,27 @@ module Hercules
     end
 
     def process_get
-      return {:status => 402, :message => "Repository not found"} if @config.config[repository_name].nil?
-      return {:status => 403, :message => "Invalid token"} unless /\/#{@config.config[repository_name]['token']}$/ =~ @path
+      return {:status => 402, :message => "Repository not found"} if @config[repository_name].nil?
+      return {:status => 403, :message => "Invalid token"} unless /\/#{@config[repository_name]['token']}$/ =~ @path
       response = {}
       @config.branches[repository_name].each do |k|
-        response[k] = {:deployed => File.exist?(@config.config[repository_name]['target_directory'] + '/branches/' + k) }
+        response[k] = {:deployed => File.exist?(@config[repository_name]['target_directory'] + '/branches/' + k) }
       end
       {:status => 200, :message => response.to_json }
     end
 
     def process_post
       return {:status => 404, :message => "POST content is null"} if @body.nil? 
-      return {:status => 404, :message => "Repository #{repository_name} not found in config"} unless @config.config.include? repository_name
-      return {:status => 404, :message => "Branch #{branch} not found in config"} unless @config.config[repository_name].include? branch
-      return {:status => 403, :message => "Invalid token"} unless /\/#{@config.config[repository_name]['token']}$/ =~ @path
+      return {:status => 404, :message => "Repository #{repository_name} not found in config"} unless @config.include? repository_name
+      return {:status => 404, :message => "Branch #{branch} not found in config"} unless @config[repository_name].include? branch
+      return {:status => 403, :message => "Invalid token"} unless /\/#{@config[repository_name]['token']}$/ =~ @path
       deploy
     end
 
     # Call the Deployer class to do the deploy magic.
     # To implement a diferent SCM we will need to rewrite the Deployer and this method.
     def deploy
-      d = Deployer.new(@log, @config.config[repository_name], branch)
+      d = Deployer.new(@log, @config[repository_name], branch)
       begin
         d.deploy
         return {:status => 200, :message => "ok"}

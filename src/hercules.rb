@@ -63,7 +63,7 @@ module Hercules
     def reload_config    
       begin
         @log.info "Reloading config file #{@options.config_file}..." 
-        @config = YAML.load_file( @options.config_file )       
+        @config = ::Hercules::Config.new(@options.config_file)
         @log.info "Configuration updated." 
       rescue Exception => e      
         @log.error "Error reading config file #{@options.config_file}: #{e.inspect}"
@@ -120,7 +120,7 @@ module Hercules
       @config.branches.each do |project,branches|
         branches.each do |branch|
           begin
-            Deployer.new(@log, @config.config[project], branch).deploy
+            Deployer.new(@log, @config[project], branch).deploy
           rescue Exception => e
             @log.error "Error in startup checkout of branch #{branch}: #{e.message}\nBacktrace:#{e.backtrace}"
           end

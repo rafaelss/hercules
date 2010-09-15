@@ -9,8 +9,7 @@ class RequestHandlerTest < Test::Unit::TestCase
   include GitSetup
   def setup
     git_setup
-    @config_obj = ::Hercules::Config.new(File.dirname(__FILE__) + '/fixtures/config.yml')
-    @config = @config_obj.config
+    @config = ::Hercules::Config.new(File.dirname(__FILE__) + '/fixtures/config.yml')
     @json_request = %<payload={
   "before": "5aef35982fb2d34e9d9d4502f6ede1072793222d",
   "repository": {
@@ -54,19 +53,19 @@ class RequestHandlerTest < Test::Unit::TestCase
   end
 
   def post token
-    handler = Hercules::RequestHandler.new({:config => @config_obj, :log => Logger.new("/dev/null"), :method => "POST", :path => "/github/#{token}", :query => "", :body => @json_request})
+    handler = Hercules::RequestHandler.new({:config => @config, :log => Logger.new("/dev/null"), :method => "POST", :path => "/github/#{token}", :query => "", :body => @json_request})
     handler.status # just to ensure we process the request before any assert
     handler
   end
 
   def get path
-    handler = Hercules::RequestHandler.new({:config => @config_obj, :log => Logger.new("/dev/null"), :method => "GET", :path => "/github/#{path}", :query => "", :body => @json_request})
+    handler = Hercules::RequestHandler.new({:config => @config, :log => Logger.new("/dev/null"), :method => "GET", :path => "/github/#{path}", :query => "", :body => @json_request})
     handler.status # just to ensure we process the request before any assert
     handler
   end
 
   def test_read_repository_attributes
-    handler = Hercules::RequestHandler.new({:config => @config_obj, :log => Logger.new("/dev/null"), :method => "POST", :path => "/github", :query => "", :body => @json_request})
+    handler = Hercules::RequestHandler.new({:config => @config, :log => Logger.new("/dev/null"), :method => "POST", :path => "/github", :query => "", :body => @json_request})
     assert_equal "test_project", handler.repository_name
     assert_equal "file:///tmp/hercules_test_repository", handler.repository_url
     assert_equal "master", handler.branch

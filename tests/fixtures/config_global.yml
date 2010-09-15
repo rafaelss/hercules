@@ -1,0 +1,14 @@
+---
+host: "127.0.0.1"
+port: 8081
+test_project:
+  token: abc
+  repository: file:///tmp/hercules_test_repository
+  target_directory: /tmp/hercules_test_checkout
+  master:
+    checkout_on_startup: false
+    checkouts_to_keep: 1
+  test:
+    checkout_on_startup: false
+    checkouts_to_keep: 3
+
