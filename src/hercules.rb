@@ -10,6 +10,7 @@ require 'ostruct'
 require 'yaml'
 
 require File.dirname(__FILE__) + '/http_handler'
+require File.dirname(__FILE__) + '/config'
 
 module Hercules
   class Hercules
@@ -71,7 +72,7 @@ module Hercules
 
     def read_config    
       begin
-        @config = YAML.load_file( @options.config_file )       
+        @config = ::Hercules::Config.new(@options.config_file)
       rescue Exception => e      
         @log.fatal "Error reading config file #{@options.config_file}: #{e.inspect}"
         exit -1
@@ -116,14 +117,12 @@ module Hercules
     end
 
     def startup_checkouts
-      @config.each do |project,config|
-        config.each do |branch,options|
-          if options.is_a?(Hash) and options["checkout_on_startup"]
-            begin
-              Deployer.new(@log, config, branch).deploy
-            rescue Exception => e
-              @log.error "Error in startup checkout of branch #{branch}: #{e.message}\nBacktrace:#{e.backtrace}"
-            end
+      @config.branches.each do |project,branches|
+        branches.each do |branch|
+          begin
+            Deployer.new(@log, @config.config[project], branch).deploy
+          rescue Exception => e
+            @log.error "Error in startup checkout of branch #{branch}: #{e.message}\nBacktrace:#{e.backtrace}"
           end
         end
       end
@@ -135,8 +134,8 @@ module Hercules
         Signal.trap("HUP"){ reload_config }
         startup_checkouts
         EventMachine.epoll
-        host = @config['host'] || "0.0.0.0"
-        port = @config['port'] || 8080
+        host = @config.host
+        port = @config.port
         EventMachine::start_server(host, port, HttpHandler, {:log => @log, :config => @config})
         @log.info "Listening on #{host}:#{port}..."
       end

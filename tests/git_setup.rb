@@ -24,7 +24,7 @@ module GitSetup
 
   def generate_bogus_gemfile
     change_repository do
-      File.open('./Gemfile', 'a'){|f| f.write('gem syntax error "Gem_That_Does_Not_Exist", "0.0.0"') }
+      File.open('./Gemfile', 'a'){|f| f.write('gem syntax error "Gem_That_Does_Not_Exist", "0.0.0", - % $ ') }
     end
   end
 

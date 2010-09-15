@@ -4,9 +4,14 @@ class ConfigTest < Test::Unit::TestCase
   def test_basic_methods_with_default_fixture
     config = Hercules::Config.new 'tests/fixtures/config.yml'
     assert_equal ['test_project'], config.projects
-    assert_equal ['target_directory', 'repository', 'token'], config.project_attributes
-    assert_equal ['checkout_on_startup', 'checkouts_to_keep'], config.branch_attributes
+    assert_equal ['target_directory', 'repository', 'token'], Hercules::Config.project_attributes
+    assert_equal ['checkout_on_startup', 'checkouts_to_keep'], Hercules::Config.branch_attributes
     assert_equal ['master', 'test'], config.branches['test_project']
+  end
+
+  def test_config_attr_reader
+    config = Hercules::Config.new 'tests/fixtures/config.yml'
+    assert_equal config.config, YAML.load_file('tests/fixtures/config.yml')
   end
 
   def test_config_validation

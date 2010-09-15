@@ -1,6 +1,7 @@
 # coding: utf-8
 require 'tests/git_setup'
 require 'src/request_handler'
+require 'src/config'
 require 'logger'
 require 'json'
 
@@ -8,7 +9,8 @@ class RequestHandlerTest < Test::Unit::TestCase
   include GitSetup
   def setup
     git_setup
-    @config = YAML.load_file(File.dirname(__FILE__) + '/fixtures/config.yml')
+    @config_obj = ::Hercules::Config.new(File.dirname(__FILE__) + '/fixtures/config.yml')
+    @config = @config_obj.config
     @json_request = %<payload={
   "before": "5aef35982fb2d34e9d9d4502f6ede1072793222d",
   "repository": {
@@ -52,19 +54,19 @@ class RequestHandlerTest < Test::Unit::TestCase
   end
 
   def post token
-    handler = Hercules::RequestHandler.new({:config => @config, :log => Logger.new("/dev/null"), :method => "POST", :path => "/github/#{token}", :query => "", :body => @json_request})
+    handler = Hercules::RequestHandler.new({:config => @config_obj, :log => Logger.new("/dev/null"), :method => "POST", :path => "/github/#{token}", :query => "", :body => @json_request})
     handler.status # just to ensure we process the request before any assert
     handler
   end
 
   def get path
-    handler = Hercules::RequestHandler.new({:config => @config, :log => Logger.new("/dev/null"), :method => "GET", :path => "/github/#{path}", :query => "", :body => @json_request})
+    handler = Hercules::RequestHandler.new({:config => @config_obj, :log => Logger.new("/dev/null"), :method => "GET", :path => "/github/#{path}", :query => "", :body => @json_request})
     handler.status # just to ensure we process the request before any assert
     handler
   end
 
   def test_read_repository_attributes
-    handler = Hercules::RequestHandler.new({:config => @config, :log => Logger.new("/dev/null"), :method => "POST", :path => "/github", :query => "", :body => @json_request})
+    handler = Hercules::RequestHandler.new({:config => @config_obj, :log => Logger.new("/dev/null"), :method => "POST", :path => "/github", :query => "", :body => @json_request})
     assert_equal "test_project", handler.repository_name
     assert_equal "file:///tmp/hercules_test_repository", handler.repository_url
     assert_equal "master", handler.branch
@@ -101,14 +103,6 @@ class RequestHandlerTest < Test::Unit::TestCase
     res = post "abc"
     assert_equal 404, res.status
     assert_match /Branch .* not found/, res.message
-  end
-
-  def test_could_not_install_gem
-    generate_bogus_gemfile
-    res = post "abc"
-    assert_match /Failed to run/, res.message
-    assert_equal 500, res.status
-    assert !File.exists?(@config['test_project']['target_directory'] + '/branches/master')
   end
 
   def test_deployer_false
