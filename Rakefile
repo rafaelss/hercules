@@ -4,8 +4,7 @@ end
 task :test do  
   require "rubygems"
   require "rake/runtest"
-  require "bundler"
-  Bundler.setup
+  require "bundler/setup"
   verbose(false) do
     mkdir_p 'tmp'
     Rake.run_tests 'tests/*test.rb'
