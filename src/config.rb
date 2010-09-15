@@ -66,7 +66,10 @@ module Hercules
       projects.each do |k,v|
         raise InvalidConfig.new("Config file error. #{k} expects a hash of options but got #{v}") unless v.is_a?(Hash)
         # Every project attribute is mandatory
-        raise InvalidConfig.new("Config file error. #{k} expects a hash of options but got #{v}") unless self.class.project_attributes & v.keys == self.class.project_attributes
+        raise InvalidConfig.new("Config file lacks some project attribute, every project must have #{self.class.project_attributes.inspect}") unless !v.nil? and self.class.project_attributes & v.keys == self.class.project_attributes
+        branches[k].each do |branch|
+          raise InvalidConfig.new("Branch #{branch} in project #{k} lacks some branch attribute, every branch must have #{self.class.branch_attributes.inspect}") unless !@config[k][branch].nil? and self.class.branch_attributes & @config[k][branch].keys == self.class.branch_attributes
+        end
       end
     end
   end

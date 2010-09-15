@@ -18,11 +18,8 @@ class ConfigTest < Test::Unit::TestCase
   end
 
   def test_config_validation
-    [ 'tests/fixtures/config_empty.yml', 'tests/fixtures/config_empty_projects.yml', 'tests/fixtures/config_partial_1.yml', 'tests/fixtures/config_partial_2.yml', 'tests/fixtures/config_partial_3.yml'].each do |p|
+    [ 'tests/fixtures/config_empty.yml', 'tests/fixtures/config_empty_branches.yml', 'tests/fixtures/config_empty_projects.yml', 'tests/fixtures/config_partial_1.yml', 'tests/fixtures/config_partial_2.yml', 'tests/fixtures/config_partial_3.yml'].each do |p|
       assert_invalid_config(p) 
-    end
-    assert_nothing_raised do 
-      config = Hercules::Config.new('tests/fixtures/config_empty_branches.yml')
     end
   end
 
