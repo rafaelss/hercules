@@ -1,0 +1,7 @@
+---
+test_project:
+  token: abc
+  repository: file:///tmp/hercules_test_repository
+  master:
+  test:
+

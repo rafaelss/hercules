@@ -1,0 +1,7 @@
+---
+test_project:
+  token: abc
+  target_directory: /tmp/hercules_test_checkout
+  master:
+  test:
+
