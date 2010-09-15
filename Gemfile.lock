@@ -1,0 +1,16 @@
+GEM
+  remote: http://rubygems.org/
+  specs:
+    eventmachine (0.12.10)
+    eventmachine_httpserver (0.2.0)
+    git (1.2.5)
+    json (1.4.6)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  eventmachine (= 0.12.10)
+  eventmachine_httpserver (= 0.2.0)
+  git (= 1.2.5)
+  json (= 1.4.6)
