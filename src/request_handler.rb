@@ -56,8 +56,8 @@ module Hercules
       return {:status => 402, :message => "Repository not found"} if @config[repository_name].nil?
       return {:status => 403, :message => "Invalid token"} unless /\/#{@config[repository_name]['token']}$/ =~ @path
       response = {}
-      @config[repository_name].keys.find_all{|e| e unless ["target_directory", "repository", "token"].include?(e)}.each do |k|
-        response[k] = {:deployed => false}
+      @config[repository_name].keys.find_all{|e| e unless ['target_directory', 'repository', 'token'].include?(e)}.each do |k|
+        response[k] = {:deployed => File.exist?(@config[repository_name]['target_directory'] + '/branches/' + k) }
       end
       {:status => 200, :message => response.to_json }
     end

@@ -177,5 +177,13 @@ class RequestHandlerTest < Test::Unit::TestCase
     assert_equal 403, res.status
     assert_match /Invalid token/, res.message
   end
+
+  def test_get_project_root_with_right_token_after_deploy
+    res = post "abc"
+    assert_equal 200, res.status
+    res = get "test_project/abc"
+    assert_equal 200, res.status
+    assert_equal({'master' => {'deployed' => true}, 'test' => {'deployed' => false}}, JSON.parse(res.message))
+  end
 end
 
