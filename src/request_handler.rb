@@ -33,7 +33,8 @@ module Hercules
 
     # Returns the repository name that fired the request.
     def repository_name
-      payload['repository']['name']
+      return payload['repository']['name'] if @method == "POST"
+      return @path.split('/')[2] if @method == "GET"
     end
 
     # Returns the url of the repository that fired the request.
@@ -52,7 +53,13 @@ module Hercules
     end
 
     def process_get
-      {:status => 404, :message => "GET not supported" }
+      return {:status => 402, :message => "Repository not found"} if @config[repository_name].nil?
+      return {:status => 403, :message => "Invalid token"} unless /\/#{@config[repository_name]['token']}$/ =~ @path
+      response = {}
+      @config[repository_name].keys.find_all{|e| e unless ["target_directory", "repository", "token"].include?(e)}.each do |k|
+        response[k] = {:deployed => false}
+      end
+      {:status => 200, :message => response.to_json }
     end
 
     def process_post

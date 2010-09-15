@@ -2,6 +2,7 @@
 require 'tests/git_setup'
 require 'src/request_handler'
 require 'logger'
+require 'json'
 
 class RequestHandlerTest < Test::Unit::TestCase
   include GitSetup
@@ -52,7 +53,13 @@ class RequestHandlerTest < Test::Unit::TestCase
 
   def post token
     handler = Hercules::RequestHandler.new({:config => @config, :log => Logger.new("/dev/null"), :method => "POST", :path => "/github/#{token}", :query => "", :body => @json_request})
-    handler.status
+    handler.status # just to ensure we process the request before any assert
+    handler
+  end
+
+  def get path
+    handler = Hercules::RequestHandler.new({:config => @config, :log => Logger.new("/dev/null"), :method => "GET", :path => "/github/#{path}", :query => "", :body => @json_request})
+    handler.status # just to ensure we process the request before any assert
     handler
   end
 
@@ -157,6 +164,18 @@ class RequestHandlerTest < Test::Unit::TestCase
     assert_equal 200, res.status
     assert File.exists?(@config['test_project']['target_directory'] + '/branches/master')
     assert File.exists?(@config['test_project']['target_directory'] + '/branches/master/branch_name_master')
+  end
+
+  def test_get_project_root_with_right_token
+    res = get "test_project/abc"
+    assert_equal 200, res.status
+    assert_equal({'master' => {'deployed' => false}, 'test' => {'deployed' => false}}, JSON.parse(res.message))
+  end
+
+  def test_get_project_root_with_wrong_token
+    res = get "test_project/wrong_token"
+    assert_equal 403, res.status
+    assert_match /Invalid token/, res.message
   end
 end
 

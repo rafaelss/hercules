@@ -5,7 +5,6 @@ require 'eventmachine'
 require 'evma_httpserver'
 require 'json'
 require File.dirname(__FILE__) + '/request_handler'
-require File.dirname(__FILE__) + '/deployer'
 
 module Hercules
   class HttpHandler < EventMachine::Connection
