@@ -4,6 +4,17 @@ require 'yaml'
 module Hercules
   class InvalidConfig < Exception; end
   class Config
+    def initialize(path)
+      @config = nil
+      @path = path
+      reload
+      validate
+    end
+
+    def reload
+      @config = YAML.load_file(@path)
+    end
+
     def [](k)
       @config[k]
     end
@@ -16,11 +27,6 @@ module Hercules
 
     def include?(k)
       @config.include?(k)
-    end
-
-    def initialize(path)
-      @config = YAML.load_file(path)
-      validate
     end
 
     def host

@@ -17,6 +17,7 @@ module Hercules
 
     def process_http_request
       begin
+        @config.reload
         resp = EventMachine::DelegatedHttpResponse.new( self )
         req = RequestHandler.new({:config => @config, :log => @log, :method => @http_request_method, :path => @http_path_info, :query => @http_query_string, :body => @http_post_content})
         return send(resp, req.status, req.message)

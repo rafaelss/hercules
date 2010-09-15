@@ -62,7 +62,7 @@ module Hercules
     def reload_config    
       begin
         @log.info "Reloading config file #{@options.config_file}..." 
-        @config = ::Hercules::Config.new(@options.config_file)
+        @config.reload
         @log.info "Configuration updated." 
       rescue Exception => e      
         @log.error "Error reading config file #{@options.config_file}: #{e.inspect}"
