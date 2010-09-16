@@ -14,7 +14,9 @@ module Startup
 
   def start_hercules config = 'tests/fixtures/config.yml'
     verbose(false) do
-      sh "src/hercules.rb -l tmp/test.log -V -c " + config
+      Bundler.with_clean_env do
+        sh "src/hercules.rb -l tmp/test.log -V -c " + config
+      end
       begin
         sleep 1
         pid = File.open(@pidfile, 'r').read()

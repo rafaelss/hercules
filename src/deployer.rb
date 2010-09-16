@@ -24,13 +24,17 @@ module Hercules
     def deploy
       git = GitHandler.new @config
       git.deploy_branch(@branch) do |dir, branch|
-        @cmd.cd(dir).run!("bundle install --deployment")
-        @trigger_class = look_for_triggers(dir)
-        before_trigger(dir) if has_before_trigger?
+        Bundler.with_clean_env do
+          @cmd.cd(dir).run!("bundle install --deployment")
+          @trigger_class = look_for_triggers(dir)
+          before_trigger(dir) if has_before_trigger?
+        end
       end
       @log.warn "Branch #{@branch} deployed"
       dir = "#{git.branches_path}/#{@branch}"
-      after_trigger(dir) if has_after_trigger?
+      Bundler.with_clean_env do
+        after_trigger(dir) if has_after_trigger?
+      end
       # Now we must store the deploy output
       output_dir = "#{@config['target_directory']}/output/#{@branch}/"
       FileUtils.mkdir_p output_dir
