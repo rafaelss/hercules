@@ -24,7 +24,6 @@ module Hercules
     def deploy
       git = GitHandler.new @config
       git.deploy_branch(@branch) do |dir, branch|
-        `cd #{dir}`
         @cmd.cd(dir).run!("bundle install --deployment")
         @trigger_class = look_for_triggers(dir)
         before_trigger(dir) if has_before_trigger?
