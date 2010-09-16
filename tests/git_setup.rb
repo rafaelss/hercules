@@ -11,12 +11,14 @@ module GitSetup
     FileUtils.mkdir_p(dir)
     FileUtils.cp(File.dirname(__FILE__) + '/fixtures/config.yml', "#{dir}/config.yml")
     FileUtils.cp(File.dirname(__FILE__) + '/fixtures/Gemfile', "#{dir}/Gemfile")
+    FileUtils.cp(File.dirname(__FILE__) + '/fixtures/Gemfile.lock', "#{dir}/Gemfile.lock")
     @g = Git.init(dir)
     @g.chdir do
       @g.config('user.name', 'Test User')
       @g.config('user.email', 'email@email.com')
       @g.add("./config.yml")
       @g.add("./Gemfile")
+      @g.add("./Gemfile.lock")
       @g.commit_all('message')
       @head_sha = @g.gcommit('HEAD').sha
     end

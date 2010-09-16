@@ -76,6 +76,14 @@ class RequestHandlerTest < Test::Unit::TestCase
     test_simple_post
   end
 
+  def test_could_not_install_gem
+    generate_bogus_gemfile
+    res = post "abc"
+    assert_match /Failed to run/, res.message
+    assert_equal 500, res.status
+    assert !File.exists?(@config['test_project']['target_directory'] + '/branches/master')
+  end
+
   def test_simple_post
     res = post "abc"
     assert_no_match /Repository .* not found/, res.message

@@ -1,5 +1,6 @@
 # coding: utf-8
 require 'json'
+require 'uri'
 require File.dirname(__FILE__) + '/deployer'
 
 module Hercules

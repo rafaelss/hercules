@@ -75,7 +75,7 @@ class HerculesTest < Test::Unit::TestCase
     begin
       log_content = ""
       start_hercules do |pid,log|
-        sleep 10
+        sleep 20
         log_content = log.read
         assert_match /Branch master deployed/, log_content
         assert File.exist?(@pidfile)
@@ -93,7 +93,7 @@ class HerculesTest < Test::Unit::TestCase
     start_hercules do |pid,log|
       FileUtils.mv "tests/fixtures/config.yml", "tests/fixtures/startup_checkout_config.yml"
       FileUtils.mv "tests/fixtures/config.old.yml", "tests/fixtures/config.yml"
-      sleep 10
+      sleep 20
       log_content = log.read
       assert_match /Branch master deployed/, log_content
       assert_is_checkout @config['test_project']['target_directory'] + '/branches/master'
@@ -103,7 +103,7 @@ class HerculesTest < Test::Unit::TestCase
   def test_no_checkouts_on_startups_with_default_config
     git_setup
     start_hercules do |pid,log|
-      sleep 10
+      sleep 20
       log_content = log.read
       assert_no_match /Branch master deployed/, log_content
       assert !File.exist?(@config['test_project']['target_directory'] + '/branches/master')
@@ -118,7 +118,7 @@ class HerculesTest < Test::Unit::TestCase
     start_hercules do |pid,log|
       FileUtils.mv "tests/fixtures/config.yml", "tests/fixtures/startup_checkout_config.yml"
       FileUtils.mv "tests/fixtures/config.old.yml", "tests/fixtures/config.yml"
-      sleep 10
+      sleep 20
       log_content = log.read
       assert_match /Branch master deployed/, log_content
       assert_is_checkout @config['test_project']['target_directory'] + '/branches/master'
