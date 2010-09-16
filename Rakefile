@@ -7,8 +7,7 @@ task :test do
   #require "bundler/setup"
   verbose(false) do
     mkdir_p 'tmp'
-    #Rake.run_tests 'tests/*test.rb'
-    Rake.run_tests 'tests/hercules_test.rb'
+    Rake.run_tests 'tests/*test.rb'
   end 
 end
 
