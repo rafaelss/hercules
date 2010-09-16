@@ -65,8 +65,12 @@ module Hercules
           Dir.glob("#{@config[repository_name]['target_directory']}/checkouts/#{k}/*").each do |path|
             output = ""
             checkout = path.split('/').pop
-            File.open("#{@config[repository_name]['target_directory']}/output/#{k}/#{checkout}.log"){|f| output = f.read }
-            checkouts[checkout] = {:timestamp => File.mtime(path).strftime("%Y-%m-%d %H:%M:%S"), :output => output}
+            begin
+              File.open("#{@config[repository_name]['target_directory']}/output/#{k}/#{checkout}.log"){|f| output = f.read }
+              checkouts[checkout] = {:timestamp => File.mtime(path).strftime("%Y-%m-%d %H:%M:%S"), :output => output}
+            rescue Errno::ENOENT => e
+              checkouts[checkout] = {:timestamp => File.mtime(path).strftime("%Y-%m-%d %H:%M:%S")}
+            end
           end
           response[k][:checkouts] = checkouts
         end

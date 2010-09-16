@@ -191,5 +191,16 @@ class RequestHandlerTest < Test::Unit::TestCase
     timestamp = File.mtime(@config['test_project']['target_directory'] + '/branches/master').strftime("%Y-%m-%d %H:%M:%S")
     assert_equal({'master' => {'deployed' => true, 'checkouts' => {checkout => {'timestamp' => timestamp, 'output' => output}}}, 'test' => {'deployed' => false}}, JSON.parse(res.message))
   end
+  def test_get_should_not_return_error_upon_non_existent_log_file
+    res = post "abc"
+    assert_equal 200, res.status
+    log_path = Dir.glob(@config['test_project']['target_directory'] + '/output/master/*').pop
+    FileUtils.rm_f(log_path)
+    res = get "test_project/abc"
+    assert_equal 200, res.status
+    checkout = log_path.split('/').pop.gsub(/\.log/, '')
+    timestamp = File.mtime(@config['test_project']['target_directory'] + '/branches/master').strftime("%Y-%m-%d %H:%M:%S")
+    assert_equal({'master' => {'deployed' => true, 'checkouts' => {checkout => {'timestamp' => timestamp}}}, 'test' => {'deployed' => false}}, JSON.parse(res.message))
+  end
 end
 
