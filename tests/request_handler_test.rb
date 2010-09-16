@@ -59,7 +59,7 @@ class RequestHandlerTest < Test::Unit::TestCase
   end
 
   def get path
-    handler = Hercules::RequestHandler.new({:config => @config, :log => Logger.new("/dev/null"), :method => "GET", :path => "/github/#{path}", :query => "", :body => @json_request})
+    handler = Hercules::RequestHandler.new({:config => @config, :log => Logger.new("/dev/null"), :method => "GET", :path => "/#{path}", :query => "", :body => @json_request})
     handler.status # just to ensure we process the request before any assert
     handler
   end

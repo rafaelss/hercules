@@ -35,7 +35,7 @@ module Hercules
     # Returns the repository name that fired the request.
     def repository_name
       return payload['repository']['name'] if @method == "POST"
-      return @path.split('/')[2] if @method == "GET"
+      return @path.split('/')[1] if @method == "GET"
     end
 
     # Returns the url of the repository that fired the request.
