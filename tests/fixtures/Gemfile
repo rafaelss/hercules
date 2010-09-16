@@ -1,2 +1,1 @@
 source :gemcutter
-gem "git", "1.2.5"
