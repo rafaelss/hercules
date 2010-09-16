@@ -58,7 +58,18 @@ module Hercules
       return {:status => 403, :message => "Invalid token"} unless /\/#{@config[repository_name]['token']}$/ =~ @path
       response = {}
       @config.branches[repository_name].each do |k|
-        response[k] = {:deployed => File.exist?(@config[repository_name]['target_directory'] + '/branches/' + k) }
+        deployed = File.exist?("#{@config[repository_name]['target_directory']}/branches/#{k}")
+        response[k] = {:deployed => deployed}
+        if deployed
+          checkouts = {}
+          Dir.glob("#{@config[repository_name]['target_directory']}/checkouts/#{k}/*").each do |path|
+            output = ""
+            checkout = path.split('/').pop
+            File.open("#{@config[repository_name]['target_directory']}/output/#{k}/#{checkout}.log"){|f| output = f.read }
+            checkouts[checkout] = {:timestamp => File.mtime(path).strftime("%Y-%m-%d %H:%M:%S"), :output => output}
+          end
+          response[k][:checkouts] = checkouts
+        end
       end
       {:status => 200, :message => response.to_json }
     end

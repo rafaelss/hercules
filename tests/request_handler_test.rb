@@ -184,7 +184,12 @@ class RequestHandlerTest < Test::Unit::TestCase
     assert_equal 200, res.status
     res = get "test_project/abc"
     assert_equal 200, res.status
-    assert_equal({'master' => {'deployed' => true}, 'test' => {'deployed' => false}}, JSON.parse(res.message))
+    log_path = Dir.glob(@config['test_project']['target_directory'] + '/output/master/*').pop
+    checkout = log_path.split('/').pop.gsub(/\.log/, '')
+    output = ""
+    File.open(log_path){|f| output = f.read }
+    timestamp = File.mtime(@config['test_project']['target_directory'] + '/branches/master').strftime("%Y-%m-%d %H:%M:%S")
+    assert_equal({'master' => {'deployed' => true, 'checkouts' => {checkout => {'timestamp' => timestamp, 'output' => output}}}, 'test' => {'deployed' => false}}, JSON.parse(res.message))
   end
 end
 

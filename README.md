@@ -17,7 +17,7 @@
   and run in the application root directory:
   
       $ sudo gem install bundler
-      $ bundle install
+      $ bundle install --deployment
       $ ruby src/hercules.rb
 
   Take a look at tests/fixtures/config.yml for a sample configuration file and at tests/fixtures/deployer_true.rb for a sample deployer script.
@@ -52,3 +52,10 @@
           end
         end
       end
+
+## The web interface
+  You can check the deployment's status of your projects using GET requests.
+  If you access the address where hercules is listening (defaults to 0.0.0.0:8080) in a web browser you can ask for a project and get a JSON with the deployment's status.
+  For example, assuming I have the project test_project with the token "abc" using the default configuration I can see its deployment status with:
+
+    curl http://localhost:8080
