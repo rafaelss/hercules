@@ -14,7 +14,7 @@
             CONDITIONS OF ANY KIND, either express or implied. See the License for the
             specific language governing permissions and limitations under the License.
 
-            */
+            */\\n
 
             /* General styles */
 
@@ -45,36 +45,23 @@
             dl dt { font-weight: bold; }
             code, tt, pre {
                 font-family: "DejaVu Sans Mono",Menlo,Courier,monospace;
+                font-size: small;
             }
             code.key { color: #333; font-weight: bold; }
             code.string { color: #fff; background: black;}
-            code.number, code.boolean { color: #339; }
-            code.null { color: #666; }
 
-            button { font-size: 100%; -webkit-appearance: square-button; }
-            button[disabled] { color: #999; }
-            input, select, textarea { background: #fff; border: 1px solid;
-                border-color: #999 #ddd #ddd #999; margin: 0; padding: 1px;
-            }
-            input.placeholder { color: #999; }
-            textarea {
-                font-family: "DejaVu Sans Mono",Menlo,Courier,monospace;
-                font-size: 100%;
-            }
-            fieldset { border: none; font-size: 95%; margin: 0; padding: .2em 0 0; }
-            fieldset legend { color: #666; font-weight: bold; padding: 0; }
-            fieldset input, fieldset select { font-size: 95%; }
-            fieldset p { margin: .4em; }
-
-            p.help { color: #999; font-size: 90%; margin: 0 2em 1em; }
 
             /* Tabular listings */
+            #branches_column { width: 20% }
+            #checkouts_column { width: 30% }
+            #output_column { width: 50% }
+            #pre_output { overflow: auto }
 
             table.listing { border-collapse: separate; border-spacing: 0;
                 border: 1px solid #a7a7a7; clear: both; width: 100%;
             }
             table.listing caption { display: none; }
-            table.listing th, table.listing td { padding: .2em .5em; }
+            table.listing th { padding: .2em .5em; }
             table.listing thead th { background: #dadada repeat-x;
                 border: 1px solid #a7a7a7; border-width: 0 0 1px 1px; color: #333;
                 font-size: 95%; font-weight: normal; text-align: left;
@@ -87,18 +74,25 @@
             }
             table.listing thead th.key span {
                 background: 100% 3px no-repeat; cursor: pointer;
-                padding-right: 20px;
             }
             table.listing thead th.desc span {
             }
-            table.listing tbody tr th, table.listing tbody tr td { background: #feffea; }
+            .data { width: 100% }
+            .data, .data tr { margin: 0; padding: 0; border: 0; }
+            .data tr td { padding: .75em 1em; cursor: pointer; color: #4b6e03 }
+            .data tbody tr.selected td { background-color: #6b8e23; color: white; } 
+            time { font-size: x-small }
+            .data_column { overflow: auto }
+
+            table.listing tbody tr th, table.listing tbody tr td { background: #feffea }
             table.listing tbody tr.odd th, table.listing tbody tr.odd td,
             table.listing tbody.odd tr th, table.listing tbody.odd tr td {
                 background: #fff;
             }
-            table.listing tbody th, table.listing tbody td {
+            table.listing tbody th {
                 border-left: 1px solid #d9d9d9; padding: .4em .5em; vertical-align: top;
             }
+            table.listing tbody td {vertical-align: top; border-left: 1px solid #a7a7a7;}
             table.listing tbody th:first-child, table.listing tbody td:first-child {
                 border-left: none;
             }
@@ -106,25 +100,6 @@
             table.listing tbody th :link, table.listing tbody th :visited {
                 display: block;
             }
-            table.listing tbody.footer tr td { background: #e9e9e9;
-                border-top: 1px solid #a7a7a7; color: #999; font-size: 90%;
-                line-height: 1.8em;
-            }
-            table.listing tbody.footer #paging { float: right; }
-            table.listing tbody.footer #paging a,
-            table.listing tbody.footer #paging label {
-                padding: 0 .5em;
-            }
-            table.listing tbody.footer #paging label { color: #666; }
-            table.listing tbody.footer #paging select { font-size: 90%; padding: 0; }
-
-            #footer { background: #ddd; border-top: 1px solid #bbb; color: #000;
-                font-size: 80%; opacity: .7; padding: 5px 10px; position: absolute; right: 0;
-                bottom: 0; min-height: 1.3em; width: 190px; text-align: right;
-            }
-            #footer .couch :link, #footer .couch :visited { color: #000; }
-
-            #userCtx span { display:none; }
 
             #wrap { background: #fff 100% 0 repeat-y;
             height: 100%; margin-right: 210px; position: relative;
@@ -133,22 +108,6 @@
             #content { padding: 1em 16px 3em 10px; overflow: auto; overflow-y: scroll;
             position: absolute; top: 33px; bottom: 0; left: 0; right: 0;
             }
-
-            /* Toolbar */
-
-            #toolbar { font-size: 90%; line-height: 16px; list-style: none;
-            margin: 0 0 .5em; padding: 5px 5px 5px 3px;
-            }
-            #toolbar li { display: inline; }
-            #toolbar li.current {float:right;}
-            #toolbar button { background: transparent 2px 2px no-repeat; border: none;
-            color: #666; margin: 0; padding: 2px 1em 2px 22px; cursor: pointer;
-            font-size: 95%; line-height: 16px;
-            }
-            #toolbar button:hover { background-position: 2px -30px; color: #000; }
-            #toolbar button:active { background-position: 2px -62px; color: #000; }
-
-
         </style>
         <title>
             Deployment Interface
@@ -159,20 +118,17 @@
             Hercules Deployment Interface
         </h1>
         <div id="content">
-            <ul id="toolbar">
-                <li><button class="add">Redeploy</button></li>
-            </ul>
-            <table id="documents" class="listing" cellspacing="0">
-                <caption>Documents</caption>
+            <table id="deployments" class="listing" cellspacing="0" cellpadding="0">
+                <caption>Deployments</caption>
                 <thead>
                     <tr>
-                        <th>
+                        <th id="branches_column">
                             Branches
                         </th>
-                        <th>
+                        <th id="checkouts_column">
                             Checkouts
                         </th>
-                        <th>
+                        <th id="output_column">
                             Output
                         </th>
                     </tr>
@@ -180,14 +136,16 @@
                 <tbody class="content">
                     <tr>
                         <td>
+                            <div class="data_column">
+                            <table class="data" id="branches" cellspacing="0" cellpadding="0"></table>
+                            </div>
                         </td>
                         <td>
+                            <div class="data_column">
+                            <table class="data" id="checkouts" cellspacing="0" cellpadding="0"></table>
+                            </div>
                         </td>
-                        <td style="background: black;">
-                        <pre>
-                            <code class="string"></code>
-                        </pre>
-                        </td>
+                        <td style="background: black;"><pre id="pre_output"><code id="output" class="string"></code></pre></td>
                     </tr>
                 </tbody>
             </table>
@@ -349,8 +307,78 @@ f.top,left:d.left-f.left}},offsetParent:function(){return this.map(function(){fo
 e&&e.document?e.document.compatMode==="CSS1Compat"&&e.document.documentElement["client"+b]||e.document.body["client"+b]:e.nodeType===9?Math.max(e.documentElement["client"+b],e.body["scroll"+b],e.documentElement["scroll"+b],e.body["offset"+b],e.documentElement["offset"+b]):f===w?c.css(e,d):this.css(d,typeof f==="string"?f:f+"px")}});A.jQuery=A.$=c})(window);
 
 $(function(){
-$('#branches').html('master');
-        });
+    deployment_grid = 
+    {
+        data : {},
+        load_data : function(load_callback){ this.data = load_callback(); return this; },
+
+        refresh_branches: function() {
+            var html = '';
+            $.each(this.data, function(k, v){
+                html += '<tr onclick="deployment_grid.select_branch(this)" id="branch_' + k + '"><td>' + k + '</td></tr>';
+            });
+            $('#branches').html(html);
+            return this;
+        },
+
+        current_branch: function(){
+            return this.data[$('#branches tr.selected').attr('id').split('_')[1]]['checkouts']
+        },
+
+        current_checkout: function(){
+            return this.current_branch()[$('#checkouts tr.selected').attr('id').split('_')[1]]
+        },
+
+        refresh_checkouts: function() {
+            var html = '';
+            $.each(this.current_branch(), function(k, v){
+                    html += '<tr onclick="deployment_grid.select_checkout(this)" id="checkout_' + k + '"><td><code>' + k + '<br/><time datetime="' + v['timestamp'] + '">Deploy timestamp: ' + v['timestamp'] + '</time></code></td></tr>';
+            });
+            $('#checkouts').html(html);
+            return this;
+        },
+
+        select_checkout: function(checkout) {
+            $('#checkouts tr').removeClass('selected');
+            $(checkout).addClass('selected');
+            $('#output').html(this.current_checkout()['output']);
+            return this;
+        },
+
+        select_first_checkout: function() {
+            this.select_checkout($('#checkouts tr:first-child'))
+            return this;
+        },
+
+        select_branch: function(branch) {
+            $('#branches tr').removeClass('selected');
+            $(branch).addClass('selected');
+            this.refresh_checkouts().select_first_checkout();
+            return this;
+        },
+
+        select_first_branch: function() {
+            this.select_branch($('#branches tr:first-child'))
+            return this;
+        },
+
+        resize: function() {
+            $('#deployments').css('height', ($(window).height() - 100).toString() + 'px' )
+            $('#pre_output').css('height', ($(window).height() - 115).toString() + 'px' )
+            $('.data_column').css('height', ($(window).height() - 115).toString() + 'px' )
+            return this;
+        }
+    };
+
+    deployment_grid.load_data(function(){
+            return $.parseJSON('{"master":{"deployed":true,"checkouts":{"3a872098def1fd5e6bf70a8c7ec083e618023f71":{"output":"Master branch","timestamp":"2010-09-21 12:40:53"},"23e7209666f1fd5e6bf7777c7ec083888802a4e5":{"output":"Another checkout\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\nlets make it scroll\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\nmaybe so", "timestamp":"2010-10-10 17:09:10"}}},"test":{"deployed":true,"checkouts":{"11bfe2130005e6b345f71fd5e6bf71fd5e6bf1fd":{"output":"Test branch","timestamp":"2010-09-22 13:33:12"}}}}')
+    }).refresh_branches().select_first_branch().resize();
+    $(window).resize(function(data) {
+        deployment_grid.resize();
+    })
+});
+
+var deployment_grid = null;
         </script>
     </body>
 </html>
