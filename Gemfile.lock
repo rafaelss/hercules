@@ -1,16 +1,21 @@
 GEM
   remote: http://rubygems.org/
   specs:
+    compass (0.10.5)
+      haml (>= 3.0.4)
     eventmachine (0.12.10)
     eventmachine_httpserver (0.2.0)
     git (1.2.5)
+    haml (3.0.18)
     json (1.4.6)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
+  compass (= 0.10.5)
   eventmachine (= 0.12.10)
   eventmachine_httpserver (= 0.2.0)
   git (= 1.2.5)
+  haml (= 3.0.18)
   json (= 1.4.6)
