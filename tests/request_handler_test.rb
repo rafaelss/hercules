@@ -84,6 +84,17 @@ class RequestHandlerTest < Test::Unit::TestCase
     assert !File.exists?(@config['test_project']['target_directory'] + '/branches/master')
   end
 
+  def test_could_install_gem
+    generate_gemfile_with_gem
+    res = post "abc"
+    assert_no_match /Failed to run/, res.message
+    assert_equal 200, res.status
+    assert_is_checkout @config['test_project']['target_directory'] + '/branches/master'
+    assert File.exists?(@config['test_project']['target_directory'] + '/bundles/master')
+    assert File.exists?(@config['test_project']['target_directory'] + '/branches/master/vendor/bundle')
+  end
+
+
   def test_simple_post
     res = post "abc"
     assert_no_match /Repository .* not found/, res.message
@@ -191,6 +202,7 @@ class RequestHandlerTest < Test::Unit::TestCase
     timestamp = File.mtime(@config['test_project']['target_directory'] + '/branches/master').strftime("%Y-%m-%d %H:%M:%S")
     assert_equal({'master' => {'deployed' => true, 'checkouts' => {checkout => {'timestamp' => timestamp, 'output' => output}}}, 'test' => {'deployed' => false}}, JSON.parse(res.message))
   end
+
   def test_get_should_not_return_error_upon_non_existent_log_file
     res = post "abc"
     assert_equal 200, res.status
