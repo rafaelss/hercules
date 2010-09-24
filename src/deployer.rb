@@ -40,6 +40,7 @@ module Hercules
       Bundler.with_clean_env do
         after_trigger(dir) if has_after_trigger?
       end
+    ensure
       # Now we must store the deploy output
       output_dir = "#{@config['target_directory']}/output/#{@branch}/"
       FileUtils.mkdir_p output_dir
