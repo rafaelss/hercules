@@ -91,6 +91,7 @@ class RequestHandlerTest < Test::Unit::TestCase
     assert_equal 200, res.status
     assert_is_checkout @config['test_project']['target_directory'] + '/branches/master'
     assert File.exists?(@config['test_project']['target_directory'] + '/bundles/master')
+    assert !File.exists?(@config['test_project']['target_directory'] + '/bundles/master/master')
     assert File.exists?(@config['test_project']['target_directory'] + '/branches/master/vendor/bundle')
   end
 
@@ -129,6 +130,7 @@ class RequestHandlerTest < Test::Unit::TestCase
     assert_equal 500, res.status
     assert_match /Error while deploying/, res.message
     assert !File.exists?(@config['test_project']['target_directory'] + '/branches/master')
+    assert_equal 1, Dir.glob(@config['test_project']['target_directory'] + '/output/master/*').size
   end
 
   def test_deployer_true
