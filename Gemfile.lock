@@ -1,16 +1,36 @@
 GEM
   remote: http://rubygems.org/
   specs:
+    cgi_multipart_eof_fix (2.5.0)
+    compass (0.10.5)
+      haml (>= 3.0.4)
+    daemons (1.1.0)
     eventmachine (0.12.10)
     eventmachine_httpserver (0.2.0)
+    fastthread (1.0.7)
+    gem_plugin (0.2.3)
     git (1.2.5)
+    haml (3.0.18)
     json (1.4.6)
+    mongrel (1.1.5)
+      cgi_multipart_eof_fix (>= 2.4)
+      daemons (>= 1.0.3)
+      fastthread (>= 1.0.1)
+      gem_plugin (>= 0.2.3)
+    rack (1.2.1)
+    staticmatic (0.10.8)
+      haml (>= 2.0.0)
+      mongrel (>= 1.1.5)
+      rack (>= 1.0)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
+  compass (= 0.10.5)
   eventmachine (= 0.12.10)
   eventmachine_httpserver (= 0.2.0)
   git (= 1.2.5)
+  haml (= 3.0.18)
   json (= 1.4.6)
+  staticmatic (= 0.10.8)

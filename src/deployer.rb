@@ -25,7 +25,12 @@ module Hercules
       git = GitHandler.new @config
       git.deploy_branch(@branch) do |dir, branch|
         Bundler.with_clean_env do
-          @cmd.cd(dir).run!("bundle install --deployment")
+          @cmd.cd(dir)
+          bundle_path = "#{dir}/../../../bundles/#{@branch}"
+          FileUtils.mkdir_p(bundle_path)
+          FileUtils.mkdir_p("#{dir}/vendor")
+          FileUtils.ln_s(bundle_path, "#{dir}/vendor/bundle", :force => true)
+          @cmd.run!("bundle install --deployment")
           @trigger_class = look_for_triggers(dir)
           before_trigger(dir) if has_before_trigger?
         end
@@ -35,6 +40,7 @@ module Hercules
       Bundler.with_clean_env do
         after_trigger(dir) if has_after_trigger?
       end
+    ensure
       # Now we must store the deploy output
       output_dir = "#{@config['target_directory']}/output/#{@branch}/"
       FileUtils.mkdir_p output_dir

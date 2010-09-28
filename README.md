@@ -59,6 +59,6 @@
   If you access the address where hercules is listening (defaults to 0.0.0.0:8080) in a web browser you can ask for a project and get a JSON with the deployment's status.
   For example, assuming I have the project test_project with the token "abc" using the default configuration I can see its deployment status with:
 
-    curl http://localhost:8080
+    curl http://localhost:8080/test_project/abc
 
   Soon we will add a nice web interface with redeploy option and what-not :)

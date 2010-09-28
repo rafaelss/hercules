@@ -30,6 +30,14 @@ module GitSetup
     end
   end
 
+  def generate_gemfile_with_gem
+    path = File.expand_path( File.dirname(__FILE__) )
+    change_repository do
+      FileUtils.cp("#{path}/fixtures/Gemfile.with_git_gem", "./Gemfile")
+      FileUtils.cp("#{path}/fixtures/Gemfile.with_git_gem.lock", "./Gemfile.lock")
+    end
+  end
+
   def generate_deployer(deployer_name)
     path = File.expand_path( File.dirname(__FILE__) )
     change_repository do
