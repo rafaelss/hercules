@@ -17,10 +17,11 @@
   and run in the application root directory:
   
       $ sudo gem install bundler
-      $ bundle install --deployment
+      $ bundle install --deployment --without development
       $ ruby src/hercules.rb
 
   Take a look at tests/fixtures/config.yml for a sample configuration file and at tests/fixtures/deployer_true.rb for a sample deployer script.
+  *Important:* that hercules does not work with bundler 0.9.
 
 ## The deploy hooks
   The deployer scripts should be inside lib/hercules_triggers.rb
@@ -59,3 +60,5 @@
   For example, assuming I have the project test_project with the token "abc" using the default configuration I can see its deployment status with:
 
     curl http://localhost:8080
+
+  Soon we will add a nice web interface with redeploy option and what-not :)

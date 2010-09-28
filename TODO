@@ -1,3 +1,2 @@
-* Make http GET interface that returns JSON with projects and current deployed branches.
 * Put some javascript to create an end user interface from the JSON data.
 * Allow end users to ask for redeploy.
