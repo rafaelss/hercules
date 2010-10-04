@@ -1,15 +1,5 @@
 $green: #6b8e23
 @import "compass/css3"
-/*
-  Licensed under the Apache License, Version 2.0 (the "License"); you may not use
-  this file except in compliance with the License. You may obtain a copy of the
-  License at
-  http://www.apache.org/licenses/LICENSE-2.0
-  Unless required by applicable law or agreed to in writing, software distributed
-  under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-  CONDITIONS OF ANY KIND, either express or implied. See the License for the
-  specific language governing permissions and limitations under the License.
-  */
 /* General styles */
 html, body
   color: #000
@@ -38,7 +28,6 @@ h1
 h1 :link, h1 :visited, h1 strong
   padding: .4em .5em
 h1 :link, h1 :visited
-  // background: url(/image/path.gif) 100% 50% no-repeat
   color: #bbb
   cursor: pointer
   padding-right: 2.2em
@@ -133,28 +122,30 @@ table.listing
   color: white
 time
   font-size: x-small
-.data_column
-  overflow: hidden
-table.listing
-  tbody
-    tr
-      th, td
-        background: #feffea
-    &.odd
-      th, td
-        background: #fff
-    th
-      border-left: 1px solid #d9d9d9
-      padding: .4em .5em
-      vertical-align: top
-      text-align: left
-      *:link, *:visited
-        display: block
-    td
-      vertical-align: top
-      border-left: 1px solid #a7a7a7
-    th:first-child, td:first-child
-      border-left: none
+#checkouts_column, #branches_column
+  height: 500px
+  h3
+  ul
+    padding: 0
+    margin: 0
+    list-style: none
+    li
+      padding: 10px
+      margin: 0
+      cursor: pointer
+      &.selected
+        background: $green
+        color: white
+#branches_column
+  float: left
+  width: 36%
+  padding: 20px 2%
+#checkouts_column
+  float: left
+  width: 56%
+  padding: 20px 2%
+  ul#branches
+    li
 #wrap
   background: #fff 100% 0 repeat-y
   height: 100%
@@ -169,10 +160,15 @@ body.fullwidth #wrap
   overflow-y: scroll
 #deployments
   margin: 20px 0
-  .console
-    background: black
-  #pre_output
-    padding: 10px 20px
+#console
+  background: black
+  position: fixed
+  bottom: 0
+  left: 0
+  width: 100%
+  height: 450px
+#pre_output
+  padding: 10px 20px
 /* FANCY MILITARY HEADER */
 body
   background: #ddd
@@ -187,8 +183,7 @@ header
   padding: 0
   border-bottom: 1px solid #444
   border-top: 3px solid black
-  -webkit-box-shadow: #000 0 0 10px
-  -moz-box-shadow: #000 0 0 10px
+  +box-shadow(#000, 0, 0, 10px)
   position: fixed
   width: 100%
   min-width: 980px

@@ -8,43 +8,43 @@
       refresh_branches: function() {
         var html = '';
         $.each(this.data, function(k, v){
-          html += '<tr onclick="deployment_grid.select_branch(this)" id="branch_' + k + '"><td>' + k + '</td></tr>';
+          html += '<li onclick="deployment_grid.select_branch(this)" id="branch_' + k + '">' + k + '</li>';
         });
         $('#branches').html(html);
         return this;
       },
       current_branch: function(){
-        return this.data[$('#branches tr.selected').attr('id').split('_')[1]]['checkouts']
+        return this.data[$('#branches li.selected').attr('id').split('_')[1]]['checkouts']
       },
       current_checkout: function(){
-        return this.current_branch()[$('#checkouts tr.selected').attr('id').split('_')[1]]
+        return this.current_branch()[$('#checkouts li.selected').attr('id').split('_')[1]]
       },
       refresh_checkouts: function() {
         var html = '';
         $.each(this.current_branch(), function(k, v){
-          html += '<tr onclick="deployment_grid.select_checkout(this)" id="checkout_' + k + '"><td><code>' + k + '<br/><time datetime="' + v['timestamp'] + '">Deploy timestamp: ' + v['timestamp'] + '</time></code></td></tr>';
+          html += '<li onclick="deployment_grid.select_checkout(this)" id="checkout_' + k + '"><code>' + k + '<br/><time datetime="' + v['timestamp'] + '">Deploy timestamp: ' + v['timestamp'] + '</time></code></li>';
         });
         $('#checkouts').html(html);
         return this;
       },
       select_checkout: function(checkout) {
-        $('#checkouts tr').removeClass('selected');
+        $('#checkouts li').removeClass('selected');
         $(checkout).addClass('selected');
         $('#output').html(this.current_checkout()['output']);
         return this;
       },
       select_first_checkout: function() {
-        this.select_checkout($('#checkouts tr:first-child'))
+        this.select_checkout($('#checkouts li:first-child'))
         return this;
       },
       select_branch: function(branch) {
-        $('#branches tr').removeClass('selected');
+        $('#branches li').removeClass('selected');
         $(branch).addClass('selected');
         this.refresh_checkouts().select_first_checkout();
         return this;
       },
       select_first_branch: function() {
-        this.select_branch($('#branches tr:first-child'))
+        this.select_branch($('#branches li:first-child'))
         return this;
       },
       resize: function() {
