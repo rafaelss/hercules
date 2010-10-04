@@ -3,12 +3,9 @@
     %caption Deployments
     %thead
       %tr
-        %th#branches_column
-          Branches
-        %th#checkouts_column
-          Checkouts
-        %th#output_column
-          Output
+        %th#branches_column Branches
+        %th#checkouts_column Checkouts
+        %th#output_column Output
     %tbody.content
       %tr
         %td
@@ -17,6 +14,6 @@
         %td
           .data_column
             %table.data#checkouts{:cellspacing=>"0", :cellpadding=>"0"}
-        %td{:style => 'background:black;'}
+        %td.console
           %pre#pre_output
             %code#output.string
