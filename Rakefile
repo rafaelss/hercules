@@ -22,10 +22,10 @@ end
 
 desc "runs HDI preview"
 task :preview do
-  sh "cd src/webinterface/hdi && staticmatic preview ."
+  sh "cd src/hdi && staticmatic preview ."
 end
 
 desc "build the HDI"
 task :build do
-  sh "cd src/webinterface/hdi && staticmatic build ."
+  sh "cd src/hdi && staticmatic build ."
 end

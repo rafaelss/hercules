@@ -11,6 +11,15 @@
   * Installs gems using Bundler (http://gembundler.com/)
   * Uses the eventmachine http server, little dependencies, simple code.
   
+## Roadmap
+
+  * Put some javascript to create an end user interface from the JSON data.
+  * Allow end users to ask for redeploy.
+  * Allow end user to rollback deployments.
+  * Change checkout color according to deployment status.
+  * Implement on_error trigger.
+  * Put some code ready for sending emails (to be used inside on_error triggers).
+
 ## Installation
 
   For now you have to clone the repository [hercules](http://github.com/diogob/hercules)
