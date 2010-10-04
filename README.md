@@ -17,6 +17,7 @@
   * Allow end users to ask for redeploy.
   * Allow end user to rollback deployments.
   * Change checkout color according to deployment status.
+  * Show commit messages with the checkout sha1.
   * Implement on_error trigger.
   * Put some code ready for sending emails (to be used inside on_error triggers).
 
