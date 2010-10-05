@@ -20,18 +20,19 @@
   * Show commit messages with the checkout sha1.
   * Implement on_error trigger.
   * Put some code ready for sending emails (to be used inside on_error triggers).
+  * Display time in a [military fashion](http://en.wikipedia.org/wiki/24-hour_clock#Military_time)
 
 ## Installation
 
   For now you have to clone the repository [hercules](http://github.com/diogob/hercules)
   and run in the application root directory:
-  
+
       $ sudo gem install bundler
       $ bundle install --deployment --without development
       $ ruby src/hercules.rb
 
   Take a look at tests/fixtures/config.yml for a sample configuration file and at tests/fixtures/deployer_true.rb for a sample deployer script.
-  *Important:* that hercules does not work with bundler 0.9.
+  *Very important:* Hercules does not work with bundler 0.9.
 
 ## The deploy hooks
   The deployer scripts should be inside lib/hercules_triggers.rb

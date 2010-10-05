@@ -49,7 +49,7 @@
       },
       resize: function() {
         $('#deployments').css('height', ($(window).height() - 100).toString() + 'px' )
-        $('#pre_output').css('height', ($(window).height() - 115).toString() + 'px' )
+        $('#pre_output').css('height', ($(window).height() - $('#content').height() - 150).toString() + 'px' )
         $('.data_column').css('height', ($(window).height() - 115).toString() + 'px' )
         return this;
       }
