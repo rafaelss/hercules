@@ -130,7 +130,7 @@ class RequestHandlerTest < Test::Unit::TestCase
     assert_equal 500, res.status
     assert_match /Error while deploying/, res.message
     assert !File.exists?(@config['test_project']['target_directory'] + '/branches/master')
-    assert_equal 1, Dir.glob(@config['test_project']['target_directory'] + '/output/master/*').size
+    assert_equal 1, Dir.glob(@config['test_project']['target_directory'] + '/logs/master/*').size
   end
 
   def test_deployer_true
@@ -197,7 +197,7 @@ class RequestHandlerTest < Test::Unit::TestCase
     assert_equal 200, res.status
     res = get "test_project/abc"
     assert_equal 200, res.status
-    log_path = Dir.glob(@config['test_project']['target_directory'] + '/output/master/*').pop
+    log_path = Dir.glob(@config['test_project']['target_directory'] + '/logs/master/*').pop
     checkout = log_path.split('/').pop.gsub(/\.log/, '')
     output = ""
     File.open(log_path){|f| output = f.read }
@@ -208,7 +208,7 @@ class RequestHandlerTest < Test::Unit::TestCase
   def test_get_should_not_return_error_upon_non_existent_log_file
     res = post "abc"
     assert_equal 200, res.status
-    log_path = Dir.glob(@config['test_project']['target_directory'] + '/output/master/*').pop
+    log_path = Dir.glob(@config['test_project']['target_directory'] + '/logs/master/*').pop
     FileUtils.rm_f(log_path)
     res = get "test_project/abc"
     assert_equal 200, res.status

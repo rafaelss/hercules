@@ -66,7 +66,7 @@ module Hercules
             output = ""
             checkout = path.split('/').pop
             begin
-              File.open("#{@config[repository_name]['target_directory']}/output/#{k}/#{checkout}.log"){|f| output = f.read }
+              File.open("#{@config[repository_name]['target_directory']}/logs/#{k}/#{checkout}.log"){|f| output = f.read }
               checkouts[checkout] = {:timestamp => File.mtime(path).strftime("%Y-%m-%d %H:%M:%S"), :output => output}
             rescue Errno::ENOENT => e
               checkouts[checkout] = {:timestamp => File.mtime(path).strftime("%Y-%m-%d %H:%M:%S")}

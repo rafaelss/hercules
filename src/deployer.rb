@@ -42,7 +42,7 @@ module Hercules
       end
     ensure
       # Now we must store the deploy output
-      output_dir = "#{@config['target_directory']}/output/#{@branch}/"
+      output_dir = "#{@config['target_directory']}/logs/#{@branch}/"
       FileUtils.mkdir_p output_dir
       @cmd.store_output "#{output_dir}/#{git.last_commit}.log"
     end
