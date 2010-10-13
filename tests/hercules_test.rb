@@ -1,6 +1,7 @@
 # coding: utf-8
 require 'tests/startup'
 require 'tests/git_setup'
+require 'test/unit'
 
 class HerculesTest < Test::Unit::TestCase
   include Startup

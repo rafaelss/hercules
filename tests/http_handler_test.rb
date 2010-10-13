@@ -3,6 +3,7 @@ require 'tests/startup'
 require 'tests/git_setup'
 require 'net/http'
 require 'uri'
+require 'test/unit'
 
 class HttpHandlerTest < Test::Unit::TestCase
   include Startup

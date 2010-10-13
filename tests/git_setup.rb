@@ -1,6 +1,8 @@
 # coding: utf-8
+require 'rubygems'
 require 'git'
 require 'src/git_handler'
+require 'yaml'
 
 module GitSetup
   def git_setup

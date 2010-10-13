@@ -1,7 +1,7 @@
 # coding: utf-8
-require 'git'
-require 'src/git_handler'
 require 'tests/git_setup'
+require 'src/git_handler'
+require 'test/unit'
 
 class GitHandlerTest < Test::Unit::TestCase
   include GitSetup

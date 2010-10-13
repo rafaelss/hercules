@@ -4,6 +4,7 @@ require 'src/request_handler'
 require 'src/config'
 require 'logger'
 require 'json'
+require 'test/unit'
 
 class RequestHandlerTest < Test::Unit::TestCase
   include GitSetup

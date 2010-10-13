@@ -1,5 +1,7 @@
 # coding: utf-8
 require 'src/config.rb'
+require 'test/unit'
+
 class ConfigTest < Test::Unit::TestCase
   def test_basic_methods_with_default_fixture
     config = Hercules::Config.new 'tests/fixtures/config.yml'

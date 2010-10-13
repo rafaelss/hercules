@@ -1,6 +1,7 @@
 # coding: utf-8
 require 'src/command_runner'
 require 'logger'
+require 'test/unit'
 
 class CommandRunnerTest < Test::Unit::TestCase
   def setup
