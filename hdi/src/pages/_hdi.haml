@@ -1,5 +1,8 @@
 :javascript 
   $(function(){
+    function main_size() {
+      return $(window).height() - $('header').height();
+    }
     deployment_grid = {
       data : {},
       load_data: function(load_callback){
@@ -48,9 +51,9 @@
         return this;
       },
       resize: function() {
-        $('#deployments').css('height', ($(window).height() - 100).toString() + 'px' )
-        $('#pre_output').css('height', ($(window).height() - $('#content').height() - 150).toString() + 'px' )
-        $('.data_column').css('height', ($(window).height() - 115).toString() + 'px' )
+        $('#checkouts_column').css('height', (main_size() * 0.3).toString() + 'px' )
+        $('#branches_column').css('height', (main_size() * 0.3).toString() + 'px' )
+        $('#pre_output').css('height', (main_size() * 0.7).toString() + 'px' )
         return this;
       }
     };

@@ -75,7 +75,6 @@ header
   top: 10px
   a
     cursor: pointer
-    +border-radius(6px)
     -webkit-box-shadow: #000 0 1px 1px inset, #bbb 0 1px 1px
     -moz-box-shadow: #000 0 1px 1px inset, #bbb 0 1px 1px
     background: #80888f
@@ -91,7 +90,6 @@ header
       background: #70787f
       top: 11px
 .project_info
-  +border-radius(1em)
   -webkit-box-shadow: #000 0 1px 1px inset, #bbb 0 1px 1px
   -moz-box-shadow: #000 0 1px 1px inset, #bbb 0 1px 1px
   background: #333
@@ -117,6 +115,7 @@ header
 #branches_column, #checkouts_column
   float: left
   padding: 10px 0 0 0
+  overflow-y: auto
 h3
   margin: 0
   font-weight: 900
@@ -129,7 +128,6 @@ ul
   list-style: none
 li
   +linear-gradient(color-stops(#eee,#bbb))
-  +border-radius(.75em)
   +box-shadow(rgba(0,0,0,.3), 0, 3px, 4px)
   padding: 10px
   margin: 0 10px 10px 10px
@@ -148,7 +146,6 @@ li
 #branches_column
   width: 30%
   li
-    +border-radius(3em)
     text-align: center
     font:
       size: 18px
