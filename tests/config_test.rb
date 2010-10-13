@@ -1,5 +1,5 @@
 # coding: utf-8
-require 'src/config.rb'
+require 'lib/config.rb'
 require 'test/unit'
 
 class ConfigTest < Test::Unit::TestCase

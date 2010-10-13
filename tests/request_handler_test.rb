@@ -1,7 +1,7 @@
 # coding: utf-8
 require 'tests/git_setup'
-require 'src/request_handler'
-require 'src/config'
+require 'lib/request_handler'
+require 'lib/config'
 require 'logger'
 require 'json'
 require 'test/unit'

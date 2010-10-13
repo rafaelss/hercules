@@ -1,5 +1,5 @@
 # coding: utf-8
-require 'src/command_runner'
+require 'lib/command_runner'
 require 'logger'
 require 'test/unit'
 

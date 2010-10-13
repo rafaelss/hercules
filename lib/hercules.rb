@@ -165,8 +165,3 @@ module Hercules
     end
   end
 end
-
-if __FILE__ == $0
-  app = Hercules::Hercules.new(ARGV, STDIN)
-  app.run
-end

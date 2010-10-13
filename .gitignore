@@ -5,4 +5,4 @@ tmp
 .bundle
 doc
 *.DS_Store
-src/hdi/.sass-cache
+hdi/.sass-cache

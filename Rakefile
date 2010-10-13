@@ -15,17 +15,17 @@ end
 desc ":doc"
 task :doc do
   sh "rm -rf doc"
-  sh "cd src && rdoc -o ../doc"
+  sh "cd lib && rdoc -o ../doc"
 end
 
 #TODO group for rake hdi:preview & rake hdi:build
 
 desc "runs HDI preview"
 task :preview do
-  sh "cd src/hdi && staticmatic preview ."
+  sh "cd hdi && staticmatic preview ."
 end
 
 desc "build the HDI"
 task :build do
-  sh "cd src/hdi && staticmatic build ."
+  sh "cd hdi && staticmatic build ."
 end
