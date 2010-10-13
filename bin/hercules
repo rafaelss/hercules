@@ -1,0 +1,7 @@
+#!/usr/bin/env ruby
+# coding: utf-8
+
+require File.dirname(__FILE__) + '/../lib/hercules'
+
+app = Hercules::Hercules.new(ARGV, STDIN)
+app.run
