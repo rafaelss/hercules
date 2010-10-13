@@ -57,14 +57,14 @@ class HttpHandlerTest < Test::Unit::TestCase
 
   def post token
     start_hercules do |pid,log|
-      res = Net::HTTP.post_form(URI.parse("http://127.0.0.1:8080/#{token}"), {'payload' => @json_request})
+      res = Net::HTTP.post_form(URI.parse("http://127.0.0.1:8080/test_project/#{token}"), {'payload' => @json_request})
       yield res, log
     end
   end
 
   def get token
     start_hercules do |pid,log|
-      res = Net::HTTP.get(URI.parse("http://127.0.0.1:8080/#{token}"))
+      res = Net::HTTP.get(URI.parse("http://127.0.0.1:8080/test_project/#{token}"))
       yield res, log
     end
   end

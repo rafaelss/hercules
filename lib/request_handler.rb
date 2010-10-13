@@ -50,6 +50,11 @@ module Hercules
 
     # Returns the assembled HDI
     def hdi
+      response = ""
+      css = ""
+      File.open(File.dirname(__FILE__) + "/../hdi/site/index.html", 'r'){|f| response = f.read }
+      File.open(File.dirname(__FILE__) + "/../hdi/site/stylesheets/style.css", 'r'){|f| css = f.read }
+      response.gsub(/<link href="stylesheets\/style.css" media="all" rel="stylesheet" type="text\/css">/, "<style>#{css}</style>").gsub(/##REQUEST_ADDRESS##/, @path.gsub(/\/hdi/, ""))
     end
 
     # Returns the url of the repository that fired the request.
