@@ -2,6 +2,7 @@
 
 require File.dirname(__FILE__) + '/git_handler'
 require File.dirname(__FILE__) + '/command_runner'
+require 'bundler'
 
 module Hercules
   # The Deployer is responsible for clonning the repository,

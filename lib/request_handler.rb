@@ -38,6 +38,11 @@ module Hercules
       return @path.split('/')[1] if @method == "GET"
     end
 
+    # Returns the security token that fired the request.
+    def request_token 
+      @path.split('/')[2]
+    end
+
     # Returns the url of the repository that fired the request.
     def repository_url
       payload['repository']['url']
@@ -55,7 +60,7 @@ module Hercules
 
     def process_get
       return {:status => 402, :message => "Repository not found"} if @config[repository_name].nil?
-      return {:status => 403, :message => "Invalid token"} unless /\/#{@config[repository_name]['token']}$/ =~ @path
+      return {:status => 403, :message => "Invalid token"} unless @config[repository_name]['token'] == request_token
       response = {}
       @config.branches[repository_name].each do |k|
         deployed = File.exist?("#{@config[repository_name]['target_directory']}/branches/#{k}")
@@ -82,7 +87,7 @@ module Hercules
       return {:status => 404, :message => "POST content is null"} if @body.nil? 
       return {:status => 404, :message => "Repository #{repository_name} not found in config"} unless @config.include? repository_name
       return {:status => 404, :message => "Branch #{branch} not found in config"} unless @config[repository_name].include? branch
-      return {:status => 403, :message => "Invalid token"} unless /\/#{@config[repository_name]['token']}$/ =~ @path
+      return {:status => 403, :message => "Invalid token"} unless @config[repository_name]['token'] == request_token
       deploy
     end
 
