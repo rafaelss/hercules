@@ -43,6 +43,15 @@ module Hercules
       @path.split('/')[2]
     end
 
+    # Returns true whenever the request made was a HDI request
+    def request_hdi?
+      @path.split('/')[3] == 'hdi' and @method == "GET"
+    end
+
+    # Returns the assembled HDI
+    def hdi
+    end
+
     # Returns the url of the repository that fired the request.
     def repository_url
       payload['repository']['url']
@@ -58,9 +67,7 @@ module Hercules
       @method == "GET" ? process_get : process_post
     end
 
-    def process_get
-      return {:status => 402, :message => "Repository not found"} if @config[repository_name].nil?
-      return {:status => 403, :message => "Invalid token"} unless @config[repository_name]['token'] == request_token
+    def project_json
       response = {}
       @config.branches[repository_name].each do |k|
         deployed = File.exist?("#{@config[repository_name]['target_directory']}/branches/#{k}")
@@ -80,7 +87,16 @@ module Hercules
           response[k][:checkouts] = checkouts
         end
       end
-      {:status => 200, :message => response.to_json }
+      response.to_json
+    end
+
+    def process_get
+      return {:status => 402, :message => "Repository not found"} if @config[repository_name].nil?
+      return {:status => 403, :message => "Invalid token"} unless @config[repository_name]['token'] == request_token
+      return {:status => 200, :message => hdi } if request_hdi?
+
+      # Otherwise we must return the json with project data
+      {:status => 200, :message => project_json }
     end
 
     def process_post

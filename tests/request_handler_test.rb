@@ -96,6 +96,21 @@ class RequestHandlerTest < Test::Unit::TestCase
     assert File.exists?(@config['test_project']['target_directory'] + '/branches/master/vendor/bundle')
   end
 
+  def test_request_hdi
+    res = get "test_project/abc"
+    assert_equal false, res.request_hdi?
+    res = get "test_project/abc/hdi"
+    assert_equal true, res.request_hdi?
+    res = post "abc/hdi"
+    assert_equal false, res.request_hdi?
+  end
+
+  def test_get_hdi
+    res = get "test_project/abc/hdi"
+    assert_equal 200, res.status
+    assert_match /<title>HDI/, res.message
+  end
+
   def test_request_token
     res = post "abc"
     assert_equal "abc", res.request_token
