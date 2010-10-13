@@ -29,7 +29,7 @@
 
       $ sudo gem install bundler
       $ bundle install --deployment --without development
-      $ ruby src/hercules.rb
+      $ ruby bin/hercules
 
   Take a look at tests/fixtures/config.yml for a sample configuration file and at tests/fixtures/deployer_true.rb for a sample deployer script.
   *Very important:* Hercules does not work with bundler 0.9.
