@@ -5,8 +5,8 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
     gem.name = "hercules"
-    gem.summary = %Q{TODO: one-line summary of your gem}
-    gem.description = %Q{TODO: longer description of your gem}
+    gem.summary = %Q{Simple deploy solution for ruby applications (using github+bundler).}
+    gem.description = %Q{Very simple deployment tool. It was made to deploy rails applications using github, bundler.}
     gem.email = "diogob@gmail.com"
     gem.homepage = "http://github.com/diogob/hercules"
     gem.authors = ["Diogo Biazus"]

@@ -1,8 +1,6 @@
 # Hercules
       
   Very simple deployment tool. It was made to deploy rails applications using github, bundler.
-  This project is in it's early stages of development, so it can be a little rough.
-  There will be a gem as soon as it's a little more polished.
   
 ## Features
 
@@ -13,7 +11,6 @@
   
 ## Roadmap
 
-  * Put some javascript to create an end user interface from the JSON data.
   * Allow end users to ask for redeploy.
   * Allow end user to rollback deployments.
   * Change checkout color according to deployment status.
@@ -27,9 +24,8 @@
   For now you have to clone the repository [hercules](http://github.com/diogob/hercules)
   and run in the application root directory:
 
-      $ sudo gem install bundler
-      $ bundle install --deployment --without development
-      $ ruby bin/hercules
+      $ gem install hercules
+      $ hercules --help
 
   Take a look at tests/fixtures/config.yml for a sample configuration file and at tests/fixtures/deployer_true.rb for a sample deployer script.
   *Very important:* Hercules does not work with bundler 0.9.
