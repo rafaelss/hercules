@@ -34,7 +34,7 @@ module Hercules
     end
 
     def port
-      @config['port'] || 8080
+      @config['port'] || 49456
     end
 
     def projects

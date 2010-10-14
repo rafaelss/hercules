@@ -30,6 +30,16 @@
   Take a look at tests/fixtures/config.yml for a sample configuration file and at tests/fixtures/deployer_true.rb for a sample deployer script.
   *Very important:* Hercules does not work with bundler 0.9.
 
+### Installing the service hook in your github project
+  It is necessary to notify hercules whenever changes are made to your project's repository. So we need to setup some service hooks in the github admin interface (which you can access using the "admin" button in your github project page).
+  In your project's github admin interface, go to "service hooks" -> Post-Receive URLs.
+  Then you put the URL that will call hercules in the blank textbox and click "Update Settings".
+  Your URL should look like:  
+    http://yourdomain.tld/github/security_token
+
+  Where github is a constant string, and security token is a string that you will put inside the config.yml.  
+  You will need only one service hook for each server you want to deploy to. When you deploy several branches to the same server hercules will diferentiate between them through the information that github sends along with the notification.
+
 ## The deploy hooks
   The deployer scripts should be inside lib/hercules_triggers.rb
   Hercules implements two deploy hooks so far: before_deploy and after_deploy.
@@ -63,9 +73,10 @@
 
 ## The JSON interface
   You can check the deployment's status of your projects using GET requests.
-  If you access the address where hercules is listening (defaults to 0.0.0.0:8080) in a web browser you can ask for a project and get a JSON with the deployment's status.
+  If you access the address where hercules is listening (defaults to 0.0.0.0:49456) in a web browser you can ask for a project and get a JSON with the deployment's status.
   For example, assuming I have the project test_project with the token "abc" using the default configuration I can see its deployment status with:
 
-    curl http://localhost:8080/test_project/abc
+    curl http://localhost:49456/test_project/abc
 
-  Soon we will add a nice web interface with redeploy option and what-not :)
+## The HDI
+  There is a very simple web interface that relies on javascript to parse and present the JSON. The plan is to improve this interface over time. This web interface is unique for each project, you can access our example project's HDI in http://localhost:49456/test_project/abc/hdi
