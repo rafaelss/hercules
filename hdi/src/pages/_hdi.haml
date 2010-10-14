@@ -3,6 +3,7 @@
     function main_size() {
       return $(window).height() - $('header').height();
     }
+
     deployment_grid = {
       data : {},
       load_data: function(load_callback){
@@ -11,7 +12,7 @@
       refresh_branches: function() {
         var html = '';
         $.each(this.data, function(k, v){
-          html += '<li onclick="deployment_grid.select_branch(this)" id="branch_' + k + '">' + k + ' (' + (v['deployed'] ? 'deployed' : 'not deployed') + ')' + '</li>';
+            html += '<li ' + (v['deployed'] ? 'onclick="deployment_grid.select_branch(this)"' : '') + 'id="branch_' + k + '">' + k + ' (' + (v['deployed'] ? 'deployed' : 'not deployed') + ')' + '</li>';
         });
         $('#branches').html(html);
         return this;

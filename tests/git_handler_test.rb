@@ -68,20 +68,23 @@ class GitHandlerTest < Test::Unit::TestCase
   def test_should_maintain_at_most_three_test_checkouts
     @g.branch('test').checkout
     g = Hercules::GitHandler.new(@config['test_project'])
+    FileUtils.mkdir_p(@config['test_project']['target_directory'] + '/logs')
     4.times do |t|
-      generate_commit "new_commit#{t}"
+      sha1 = generate_commit "new_commit#{t}"
       g.deploy_branch('test')
+      # Here we must simulate the log creating which will be done by the deployer
+      FileUtils.touch("#{@config['test_project']['target_directory']}/logs/#{sha1}.log")
+      assert File.exists?(@config['test_project']['target_directory'] + "/logs")
       assert File.exists?(@config['test_project']['target_directory'] + "/branches/test/new_commit#{t}")
       # The checkouts_to_keep in config.yml is set to 3 (so 5 is the maximum: 3 + '.' + '..')
       assert_equal (3+t > 5 ? 5 : 3+t), Dir.entries(@config['test_project']['target_directory'] + '/checkouts/test').size
-      sleep 1
+      assert_equal (3+t > 5 ? 5 : 3+t), Dir.entries(@config['test_project']['target_directory'] + '/logs').size
     end
   end
 
   def test_should_maintain_only_one_master_checkout
     g = Hercules::GitHandler.new(@config['test_project'])
     g.deploy_branch('master')
-    sleep 1
     generate_commit 'new_commit'
     g.deploy_branch('master')
     assert File.exists?(@config['test_project']['target_directory'] + '/branches/master/new_commit')
