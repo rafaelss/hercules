@@ -69,6 +69,9 @@ module Hercules
         # Here we must delete the oldest checkout
         checkout_to_delete = Dir.glob("#{dir}/*").sort{|a,b| File.new(a).mtime.strftime("%Y%m%d%H%M%S") <=> File.new(b).mtime.strftime("%Y%m%d%H%M%S") }.shift
         FileUtils.rm_r "#{checkout_to_delete}"
+        # Remove log file if it exists
+        # To achieve consistency we must remove the log when and only when we remove the checkout
+        FileUtils.rm_f "#{@options['target_directory']}/logs/#{checkout_to_delete.split('/').pop}.log"
       end
     end
   end

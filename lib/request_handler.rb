@@ -79,7 +79,7 @@ module Hercules
         response[k] = {:deployed => deployed}
         if deployed
           checkouts = {}
-          Dir.glob("#{@config[repository_name]['target_directory']}/checkouts/#{k}/*").each do |path|
+          Dir.glob("#{@config[repository_name]['target_directory']}/checkouts/#{k}/*").sort{|a,b| File.new(a).mtime.strftime("%Y%m%d%H%M%S") <=> File.new(b).mtime.strftime("%Y%m%d%H%M%S") }.each do |path|
             output = ""
             checkout = path.split('/').pop
             begin
