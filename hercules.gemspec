@@ -38,6 +38,7 @@ Gem::Specification.new do |s|
      "hdi/src/pages/_jquery.haml",
      "hdi/src/pages/index.haml",
      "hdi/src/stylesheets/style.sass",
+     "hercules.gemspec",
      "lib/command_runner.rb",
      "lib/config.rb",
      "lib/deployer.rb",
@@ -87,9 +88,33 @@ Gem::Specification.new do |s|
     s.specification_version = 3
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
+      s.add_runtime_dependency(%q<eventmachine>, ["= 0.12.10"])
+      s.add_runtime_dependency(%q<eventmachine_httpserver>, ["= 0.2.0"])
+      s.add_runtime_dependency(%q<git>, ["= 1.2.5"])
+      s.add_runtime_dependency(%q<json>, ["= 1.4.6"])
+      s.add_runtime_dependency(%q<bundler>, ["~> 1.0.0"])
+      s.add_development_dependency(%q<haml>, ["= 3.0.18"])
+      s.add_development_dependency(%q<compass>, ["= 0.10.5"])
+      s.add_development_dependency(%q<staticmatic>, ["= 0.10.8"])
     else
+      s.add_dependency(%q<eventmachine>, ["= 0.12.10"])
+      s.add_dependency(%q<eventmachine_httpserver>, ["= 0.2.0"])
+      s.add_dependency(%q<git>, ["= 1.2.5"])
+      s.add_dependency(%q<json>, ["= 1.4.6"])
+      s.add_dependency(%q<bundler>, ["~> 1.0.0"])
+      s.add_dependency(%q<haml>, ["= 3.0.18"])
+      s.add_dependency(%q<compass>, ["= 0.10.5"])
+      s.add_dependency(%q<staticmatic>, ["= 0.10.8"])
     end
   else
+    s.add_dependency(%q<eventmachine>, ["= 0.12.10"])
+    s.add_dependency(%q<eventmachine_httpserver>, ["= 0.2.0"])
+    s.add_dependency(%q<git>, ["= 1.2.5"])
+    s.add_dependency(%q<json>, ["= 1.4.6"])
+    s.add_dependency(%q<bundler>, ["~> 1.0.0"])
+    s.add_dependency(%q<haml>, ["= 3.0.18"])
+    s.add_dependency(%q<compass>, ["= 0.10.5"])
+    s.add_dependency(%q<staticmatic>, ["= 0.10.8"])
   end
 end
 

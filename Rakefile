@@ -11,6 +11,14 @@ begin
     gem.homepage = "http://github.com/diogob/hercules"
     gem.authors = ["Diogo Biazus"]
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
+    gem.add_dependency("eventmachine", "= 0.12.10")
+    gem.add_dependency("eventmachine_httpserver", "= 0.2.0")
+    gem.add_dependency("git", "= 1.2.5")
+    gem.add_dependency("json", "= 1.4.6")
+    gem.add_dependency("bundler", "~> 1.0.0")
+    gem.add_development_dependency("haml", "= 3.0.18")
+    gem.add_development_dependency("compass", "= 0.10.5")
+    gem.add_development_dependency("staticmatic", "= 0.10.8")
   end
   Jeweler::GemcutterTasks.new
 rescue LoadError
