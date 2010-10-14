@@ -78,15 +78,15 @@ module Hercules
         deployed = File.exist?("#{@config[repository_name]['target_directory']}/branches/#{k}")
         response[k] = {:deployed => deployed}
         if deployed
-          checkouts = {}
-          Dir.glob("#{@config[repository_name]['target_directory']}/checkouts/#{k}/*").each do |path|
+          checkouts = []
+          Dir.glob("#{@config[repository_name]['target_directory']}/checkouts/#{k}/*").sort{|a,b| File.new(a).ctime.strftime("%Y%m%d%H%M%S") <=> File.new(b).ctime.strftime("%Y%m%d%H%M%S") }.reverse_each do |path|
             output = ""
             checkout = path.split('/').pop
             begin
               File.open("#{@config[repository_name]['target_directory']}/logs/#{k}/#{checkout}.log"){|f| output = f.read }
-              checkouts[checkout] = {:timestamp => File.mtime(path).strftime("%Y-%m-%d %H:%M:%S"), :output => output}
+              checkouts.push({:sha1 => checkout, :timestamp => File.mtime(path).strftime("%Y-%m-%d %H:%M:%S"), :output => output})
             rescue Errno::ENOENT => e
-              checkouts[checkout] = {:timestamp => File.mtime(path).strftime("%Y-%m-%d %H:%M:%S")}
+              checkouts.push({:sha1 => checkout, :timestamp => File.mtime(path).strftime("%Y-%m-%d %H:%M:%S")})
             end
           end
           response[k][:checkouts] = checkouts

@@ -12,7 +12,7 @@
       refresh_branches: function() {
         var html = '';
         $.each(this.data, function(k, v){
-            html += '<li ' + (v['deployed'] ? 'onclick="deployment_grid.select_branch(this)"' : '') + 'id="branch_' + k + '">' + k + ' (' + (v['deployed'] ? 'deployed' : 'not deployed') + ')' + '</li>';
+          html += '<li ' + (v['deployed'] ? 'onclick="deployment_grid.select_branch(this)"' : '') + 'id="branch_' + k + '">' + k + ' (' + (v['deployed'] ? 'deployed' : 'not deployed') + ')' + '</li>';
         });
         $('#branches').html(html);
         return this;
@@ -26,7 +26,7 @@
       refresh_checkouts: function() {
         var html = '';
         $.each(this.current_branch(), function(k, v){
-          html += '<li onclick="deployment_grid.select_checkout(this)" id="checkout_' + k + '"><code>' + k + '<br/><time datetime="' + v['timestamp'] + '">Deploy timestamp: ' + v['timestamp'] + '</time></code></li>';
+          html += '<li onclick="deployment_grid.select_checkout(this)" id="checkout_' + k + '"><code>' + v['sha1'] + '<br/><time datetime="' + v['timestamp'] + '">Deploy timestamp: ' + v['timestamp'] + '</time></code></li>';
         });
         $('#checkouts').html(html);
         return this;

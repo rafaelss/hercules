@@ -224,7 +224,7 @@ class RequestHandlerTest < Test::Unit::TestCase
     output = ""
     File.open(log_path){|f| output = f.read }
     timestamp = File.mtime(@config['test_project']['target_directory'] + '/branches/master').strftime("%Y-%m-%d %H:%M:%S")
-    assert_equal({'master' => {'deployed' => true, 'checkouts' => {checkout => {'timestamp' => timestamp, 'output' => output}}}, 'test' => {'deployed' => false}}, JSON.parse(res.message))
+    assert_equal({'master' => {'deployed' => true, 'checkouts' => [{'sha1' => checkout, 'timestamp' => timestamp, 'output' => output}]}, 'test' => {'deployed' => false}}, JSON.parse(res.message))
   end
 
   def test_get_should_not_return_error_upon_non_existent_log_file
@@ -236,7 +236,7 @@ class RequestHandlerTest < Test::Unit::TestCase
     assert_equal 200, res.status
     checkout = log_path.split('/').pop.gsub(/\.log/, '')
     timestamp = File.mtime(@config['test_project']['target_directory'] + '/branches/master').strftime("%Y-%m-%d %H:%M:%S")
-    assert_equal({'master' => {'deployed' => true, 'checkouts' => {checkout => {'timestamp' => timestamp}}}, 'test' => {'deployed' => false}}, JSON.parse(res.message))
+    assert_equal({'master' => {'deployed' => true, 'checkouts' => [{'sha1' => checkout, 'timestamp' => timestamp}]}, 'test' => {'deployed' => false}}, JSON.parse(res.message))
   end
 end
 
